@@ -148,16 +148,14 @@ void autonomous() {
 	// Score 6
 	chassis.waitUntilDone();
 	pros::delay(200);
-	chassis.turnToPoint(4, 10, 1000, {.forwards = false, .maxSpeed = 100});
-	chassis.moveToPoint(4, 10, 1500, {.forwards = false, .maxSpeed = 100});
+	chassis.turnToPoint(4, 10, 1000, {.forwards = false, .maxSpeed = 80});
+	chassis.moveToPoint(4, 10, 1500, {.forwards = false, .maxSpeed = 80});
 
 	chassis.turnToPoint(39, 8, 1000, {.maxSpeed = 80});
 	chassis.moveToPoint(39, 8, 2000, {.maxSpeed = 80});
 
-	chassis.turnToPoint(31.5, 16.5, 1000, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(31.5, 16.5, 1200, {.forwards = false, .maxSpeed = 80, .earlyExitRange = 20});
-
-	chassis.moveToPoint(30, 19, 500, {.forwards = false, .maxSpeed = 80, .minSpeed = 40});
+	chassis.turnToPoint(30, 19, 1000, {.forwards = false, .maxSpeed = 80});
+	chassis.moveToPoint(30, 19, 1200, {.forwards = false, .maxSpeed = 80, .minSpeed = 40});
 
 	chassis.waitUntilDone();
 	intake_score();
@@ -166,24 +164,25 @@ void autonomous() {
 	// Pickup Match Loads
 	matchloader.set_value(true);
 	intake_hold();
-	chassis.moveToPoint(40, -11, 1500, {.maxSpeed = 100, .earlyExitRange = 15});
-	chassis.moveToPoint(40.5, -14, 600, {.minSpeed = 40});
+	chassis.moveToPoint(40, -14, 1600, {.maxSpeed = 70, .minSpeed = 20});
 	
 	// Score Match Loads
 	chassis.waitUntilDone();
-	pros::delay(500);
-	chassis.moveToPoint(31, 17, 1200, {.forwards = false, .maxSpeed = 80, .earlyExitRange = 20});
+	pros::delay(800);
 
-	chassis.moveToPoint(30, 19, 500, {.forwards = false, .minSpeed = 40});
+	chassis.moveToPoint(30, 19, 1500, {.forwards = false, .maxSpeed = 80, .minSpeed = 40});
+	chassis.waitUntilDone();
+
 	intake_score();
 	wait_until_blue();
 	intake_stop();
 
 	// Ending
-	chassis.waitUntilDone();
-	pros::delay(500);
-	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-	intake_stop();
+	// chassis.waitUntilDone();
+	// pros::delay(500);
+	// chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+	// intake_stop();
+	matchloader_down = true;
 }
 
 void opcontrol() {
