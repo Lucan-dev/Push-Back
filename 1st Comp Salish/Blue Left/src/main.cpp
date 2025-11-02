@@ -23,6 +23,7 @@ pros::Optical color_sensor(7);
 /* --------------------------------- Pistons -------------------------------- */
 pros::adi::DigitalOut matchloader('B');
 pros::adi::DigitalOut trapdoor('C');
+pros::adi::DigitalOut lift('D');
 
 /* ----------------------------- Tracking Wheels ---------------------------- */
 lemlib::TrackingWheel vert_wheel(&vert, lemlib::Omniwheel::NEW_2, -0.9375);
@@ -191,6 +192,8 @@ void opcontrol() {
 
 	int intake_bottom_speed = 0;
 	int intake_top_speed = 0;
+
+	lift.set_value(true);
 
 	// loop forever
     while (true) {
