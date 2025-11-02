@@ -2,6 +2,7 @@
 #include "lemlib/chassis/trackingWheel.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
+#include <cstdint>
 #include "main.h"
 
 /* ------------------------------- Controller ------------------------------- */
@@ -100,6 +101,11 @@ void intake_stop() {
 	intake_top.brake();
 }
 
+void outake() {
+	intake_bottom.move(-127);
+	intake_top.move(-127);
+}
+
 void wait_until_blue() {
 	int current_hue = color_sensor.get_hue();
 
@@ -146,38 +152,97 @@ void autonomous() {
 	matchloader.set_value(true);
 	intake_hold();
 
-	// Score 1st Load
 	chassis.waitUntilDone();
-	pros::delay(1200);
-	chassis.moveToPoint(-25, 43.5, 1000, {.forwards = false, .maxSpeed = 100});
+	pros::delay(1300);
+
+	// Score 1st Load
+	chassis.moveToPoint(-11, 43.5, 800, {.forwards = false});
+
+	chassis.turnToPoint(0, -51.5, 800);
+	matchloader.set_value(false);
+	chassis.moveToPoint(0, -53.5, 2500, {.maxSpeed = 80});
+
+	chassis.turnToPoint(-21, -57.5, 800, {.forwards = false, .maxSpeed = 80});
+	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 100});
+
+	outake();
+	pros::delay(100);
+	intake_stop();
 
 	chassis.waitUntilDone();
 	intake_score();
+	pros::delay(1600);
 
 	// 2nd Matchloader
-	chassis.waitUntilDone();
-	pros::delay(2000);
-	matchloader.set_value(false);
-	intake_stop();
-
-	chassis.moveToPoint(-11, 43.5, 800);
-	chassis.turnToPoint(0, -51.5, 800);
-	chassis.moveToPoint(0, -51.5, 2500, {.maxSpeed = 80});
-
-	chassis.turnToPoint(12, -55.5, 800, {.maxSpeed = 80});
-
-	chassis.moveToPoint(12, -55.5, 800, {.maxSpeed = 60, .minSpeed = 35});
+	chassis.moveToPoint(12, -55.5, 1400, {.maxSpeed = 60, .minSpeed = 35});
 	matchloader.set_value(true);
 	intake_hold();
 
-	// Score 2nd Load
 	chassis.waitUntilDone();
-	pros::delay(1200);
+	pros::delay(1300);
+
+	// Score 2nd Load
 	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 100});
 
 	chassis.waitUntilDone();
 	intake_score();
-	pros::delay(1500);
+	pros::delay(1600);
+
+	// Cross Field
+	intake_stop();
+	matchloader.set_value(false);
+	chassis.moveToPoint(-10,-57, 800);
+
+	chassis.turnToPoint(-16, -66.5, 1000);
+	chassis.moveToPoint(-16, -66.5, 1000);
+
+	chassis.turnToPoint(-76, -74, 800);
+	chassis.moveToPoint(-76, -74, 2000, {.maxSpeed = 100});
+
+	// 3rd Matchloader
+	chassis.turnToPoint(-93, -63, 1000, {.maxSpeed = 80});
+	chassis.moveToPoint(-93, -63, 1000, {.maxSpeed = 80});
+
+	chassis.turnToPoint(-107, -62, 1000, {.maxSpeed = 80});
+	chassis.moveToPoint(-107, -60, 1000, {.maxSpeed = 60, .minSpeed = 35});
+
+	matchloader.set_value(true);
+	intake_hold();
+
+	chassis.waitUntilDone();
+	pros::delay(1300);
+
+	// Score 3rd Load
+	chassis.moveToPoint(-88, -60.5, 800, {.forwards = false});
+	chassis.turnToPoint(-99, 37, 800);
+	matchloader.set_value(false);
+
+	chassis.moveToPoint(-99, 37, 2500, {.maxSpeed = 80});
+	chassis.turnToPoint(-78, 41, 1000, {.forwards = false, .maxSpeed = 80});
+	chassis.moveToPoint(-78, 41, 1000, {.forwards = false, .maxSpeed = 100});
+
+	outake();
+	pros::delay(100);
+	intake_stop();
+
+	chassis.waitUntilDone();
+	intake_score();
+	pros::delay(1600);
+
+	// 4th Matchloader
+	chassis.moveToPoint(-112, 39, 1400, {.maxSpeed = 60, .minSpeed = 35});
+	matchloader.set_value(true);
+	intake_hold();
+
+	chassis.waitUntilDone();
+	pros::delay(1300);
+
+	// Score 4th Load
+	chassis.moveToPoint(-78, 41, 1400, {.forwards = false, .maxSpeed = 100});
+
+	chassis.waitUntilDone();
+	intake_score();
+	pros::delay(1600);
 
 	// Ending
 	chassis.waitUntilDone();
