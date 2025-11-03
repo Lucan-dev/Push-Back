@@ -165,7 +165,7 @@ void autonomous() {
 	// Pickup Match Loads
 	matchloader.set_value(true);
 	intake_hold();
-	chassis.moveToPoint(-40, -14, 1600, {.maxSpeed = 70, .minSpeed = 20});
+	chassis.moveToPoint(-40, -14, 1600, {.maxSpeed = 50, .minSpeed = 20});
 	
 	// Score Match Loads
 	chassis.waitUntilDone();
