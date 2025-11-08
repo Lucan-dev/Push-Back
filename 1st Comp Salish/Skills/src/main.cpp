@@ -25,6 +25,7 @@ pros::Optical color_sensor(7);
 pros::adi::DigitalOut matchloader('B');
 pros::adi::DigitalOut trapdoor('C');
 pros::adi::DigitalOut lift('D');
+pros::adi::DigitalOut descore('E');
 
 /* ----------------------------- Tracking Wheels ---------------------------- */
 lemlib::TrackingWheel vert_wheel(&vert, lemlib::Omniwheel::NEW_2, -0.9375);
@@ -84,6 +85,7 @@ lemlib::Chassis chassis(
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
 bool trapdoor_down = false;
+bool descore_up = true;
 
 /* -------------------------------- Functions ------------------------------- */
 void intake_hold() {
@@ -260,6 +262,7 @@ void opcontrol() {
 	int intake_top_speed = 0;
 
 	lift.set_value(true);
+	descore.set_value(true);
 
 	// loop forever
     while (true) {
@@ -313,6 +316,10 @@ void opcontrol() {
 		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			matchloader_down = !matchloader_down;
 			matchloader.set_value(matchloader_down);
+
+		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+			descore_up = !descore_up;
+			descore.set_value(descore_up);
 		}
 
 		pros::delay(20);
