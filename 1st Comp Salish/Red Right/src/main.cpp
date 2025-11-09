@@ -102,6 +102,16 @@ void intake_stop() {
 	intake_top.brake();
 }
 
+void drive_forward () {
+	left_drive.move(50);
+	right_drive.move(50);
+}
+
+void drive_stop() {
+	left_drive.brake();
+	right_drive.brake();
+}
+
 void wait_until_blue() {
 	int current_hue = color_sensor.get_hue();
 
@@ -145,8 +155,8 @@ void autonomous() {
 	chassis.moveToPoint(0, 28, 2000, {.maxSpeed = 100});
 
 	// Pickup 2
-	chassis.turnToPoint(18, 48, 800);
-	chassis.moveToPoint(18, 48, 1200);
+	chassis.turnToPoint(18, 47, 800);
+	chassis.moveToPoint(18, 47, 1200);
 
 	// Score 6
 	chassis.waitUntilDone();
@@ -186,6 +196,10 @@ void autonomous() {
 	// chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	// intake_stop();
 	matchloader_down = true;
+
+	drive_forward();
+	pros::delay(200);
+	drive_stop();
 }
 
 void opcontrol() {

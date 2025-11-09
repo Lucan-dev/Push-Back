@@ -123,7 +123,7 @@ void wait_until_parked() {
 	ground_sensor.set_led_pwm(100);
 	int current_hue = ground_sensor.get_hue();
 
-	while (current_hue >= 15) {
+	while (current_hue >= 20) {
 		current_hue = ground_sensor.get_hue();
 		pros::delay(30);
 	}
@@ -179,9 +179,10 @@ void autonomous() {
 
 	chassis.turnToPoint(-21, -57.5, 800, {.forwards = false, .maxSpeed = 80});
 	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 100});
+	matchloader.set_value(true);
 
 	outake();
-	pros::delay(100);
+	pros::delay(200);
 	intake_stop();
 
 	chassis.waitUntilDone();
@@ -190,7 +191,6 @@ void autonomous() {
 
 	// 2nd Matchloader
 	chassis.moveToPoint(12, -55.5, 1400, {.maxSpeed = 60, .minSpeed = 35});
-	matchloader.set_value(true);
 	intake_hold();
 
 	chassis.waitUntilDone();
@@ -198,8 +198,12 @@ void autonomous() {
 
 	// Score 2nd Load
 	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 100});
-
 	chassis.waitUntilDone();
+
+	outake();
+	pros::delay(200);
+	intake_stop();
+
 	intake_score();
 	pros::delay(2000);
 
@@ -235,9 +239,10 @@ void autonomous() {
 	chassis.moveToPoint(-99, 37, 2500, {.maxSpeed = 80});
 	chassis.turnToPoint(-78, 41, 1000, {.forwards = false, .maxSpeed = 80});
 	chassis.moveToPoint(-78, 41, 1000, {.forwards = false, .maxSpeed = 100});
+	matchloader.set_value(true);
 
 	outake();
-	pros::delay(100);
+	pros::delay(200);
 	intake_stop();
 
 	chassis.waitUntilDone();
@@ -246,7 +251,6 @@ void autonomous() {
 
 	// 4th Matchloader
 	chassis.moveToPoint(-112, 39, 1400, {.maxSpeed = 60, .minSpeed = 35});
-	matchloader.set_value(true);
 	intake_hold();
 
 	chassis.waitUntilDone();
@@ -254,8 +258,12 @@ void autonomous() {
 
 	// Score 4th Load
 	chassis.moveToPoint(-78, 41, 1400, {.forwards = false, .maxSpeed = 100});
-
 	chassis.waitUntilDone();
+
+	outake();
+	pros::delay(200);
+	intake_stop();
+
 	intake_score();
 	pros::delay(2000);
 
