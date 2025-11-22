@@ -102,6 +102,11 @@ void intake_stop() {
 	intake_top.brake();
 }
 
+void outake() {
+	intake_bottom.move(-127);
+	intake_top.move(-127);
+}
+
 void drive_forward () {
 	left_drive.move(50);
 	right_drive.move(50);
@@ -152,39 +157,50 @@ void competition_initialize() {}
 void autonomous() {
 	// Pickup 3
 	intake_hold();
-	chassis.moveToPoint(0, 28, 2000, {.maxSpeed = 100});
+	chassis.moveToPoint(0, 20, 2000, {.earlyExitRange = 8});
+	chassis.moveToPoint(0, 35, 2000, {.maxSpeed = 40});
 
 	// Pickup 2
-	chassis.turnToPoint(-18, 47, 800);
-	chassis.moveToPoint(-18, 47, 1200);
+	chassis.turnToPoint(-20, 48.5, 1000);
+	chassis.moveToPoint(-20, 48.5, 1400,  {.maxSpeed = 100});
 
-	// Score 6
-	chassis.waitUntilDone();
-	pros::delay(200);
-	chassis.turnToPoint(-4, 10, 1000, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(-4, 10, 1500, {.forwards = false, .maxSpeed = 80});
+	// Score in Middle Goal
+	chassis.moveToPoint(3, 29.5, 1500, {.forwards = false});
 
-	chassis.turnToPoint(-39, 8, 1000, {.maxSpeed = 80});
-	chassis.moveToPoint(-39, 8, 2000, {.maxSpeed = 80});
+	chassis.turnToPoint(14, 30, 800, {.forwards = false});
+	chassis.moveToPoint(14, 30, 600, {.forwards = false, .maxSpeed = 60});
 
-	chassis.turnToPoint(-30, 19, 1000, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(-30, 19, 1200, {.forwards = false, .maxSpeed = 80, .minSpeed = 40});
+	outake();
+	pros::delay(100);
+	trapdoor.set_value(true);
+	intake_stop();
 
 	chassis.waitUntilDone();
 	intake_score();
-	pros::delay(1500);
 
-	// Pickup Match Loads
+	pros::delay(600);
+	intake_stop();
+	trapdoor.set_value(false);
+	pros::delay(200);
+
+	// Matchloader
+	chassis.moveToPoint(-36.5, 4, 2000, {.maxSpeed = 80});
+
+	chassis.turnToPoint(-38, -10.5, 1000, {.maxSpeed = 80});
+	chassis.moveToPoint(-38, -10.5, 900, {.maxSpeed = 60, .minSpeed = 15});
 	matchloader.set_value(true);
 	intake_hold();
-	chassis.moveToPoint(-40, -14, 1600, {.maxSpeed = 50, .minSpeed = 20});
-	
-	// Score Match Loads
-	chassis.waitUntilDone();
-	pros::delay(800);
 
-	chassis.moveToPoint(-30, 19, 1500, {.forwards = false, .maxSpeed = 80, .minSpeed = 40});
 	chassis.waitUntilDone();
+	pros::delay(1000);
+	intake_stop();
+
+	// Long Goal
+	chassis.moveToPoint(-29.5, 22, 1500, {.forwards = false, .maxSpeed = 80});
+	chassis.waitUntilDone();
+
+	outake();
+	pros::delay(100);
 
 	intake_score();
 	wait_until_blue();

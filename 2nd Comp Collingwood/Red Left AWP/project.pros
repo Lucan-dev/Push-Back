@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Red Left",
+    "project_name": "Red Left AWP",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -637,7 +637,7 @@
     "upload_options": {
       "icon": "pizza",
       "description": "1010X",
-      "slot": 3
+      "slot": 5
     },
     "use_early_access": true
   }
