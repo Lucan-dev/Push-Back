@@ -236,9 +236,9 @@ void autonomous() {
 	chassis.turnToPoint(-99, 37, 800);
 	matchloader.set_value(false);
 
-	chassis.moveToPoint(-99, 37, 2500, {.maxSpeed = 80});
-	chassis.turnToPoint(-78, 41, 1000, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(-78, 41, 1000, {.forwards = false, .maxSpeed = 100});
+	chassis.moveToPoint(-99, 38, 3000, {.maxSpeed = 80});
+	chassis.turnToPoint(-78, 42, 1000, {.forwards = false, .maxSpeed = 80});
+	chassis.moveToPoint(-78, 42, 1000, {.forwards = false, .maxSpeed = 100});
 	matchloader.set_value(true);
 
 	outake();
@@ -280,8 +280,8 @@ void autonomous() {
 
 	// 3rd Block Group
 	chassis.turnToHeading(180, 800, {.maxSpeed = 80});
-	chassis.turnToPoint(-23, -31, 800, {.maxSpeed = 80});
-	chassis.moveToPoint(-23, -31, 1500, {.maxSpeed = 60});
+	chassis.turnToPoint(-23, -30, 800, {.maxSpeed = 80});
+	chassis.moveToPoint(-23, -30, 1500, {.maxSpeed = 60});
 
 	// Score Middle Goal
 	chassis.turnToPoint(-41.5, -19, 900, {.forwards = false, .maxSpeed = 80});
