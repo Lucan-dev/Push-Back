@@ -123,7 +123,7 @@ void wait_until_parked() {
 	ground_sensor.set_led_pwm(100);
 	int current_hue = ground_sensor.get_hue();
 
-	while (current_hue >= 20) {
+	while (current_hue >= 25) {
 		current_hue = ground_sensor.get_hue();
 		pros::delay(30);
 	}
@@ -178,11 +178,12 @@ void autonomous() {
 	chassis.moveToPoint(0, -53.5, 2500, {.maxSpeed = 80});
 
 	chassis.turnToPoint(-21, -57.5, 800, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 100});
+	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 60});
 	matchloader.set_value(true);
 
+	pros::delay(100);
 	outake();
-	pros::delay(200);
+	pros::delay(50);
 	intake_stop();
 
 	chassis.waitUntilDone();
@@ -197,11 +198,11 @@ void autonomous() {
 	pros::delay(1300);
 
 	// Score 2nd Load
-	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 100});
+	chassis.moveToPoint(-21, -57.5, 1000, {.forwards = false, .maxSpeed = 60});
 	chassis.waitUntilDone();
 
 	outake();
-	pros::delay(200);
+	pros::delay(50);
 	intake_stop();
 
 	intake_score();
@@ -223,9 +224,9 @@ void autonomous() {
 	chassis.moveToPoint(-93, -63, 1000, {.maxSpeed = 80});
 
 	chassis.turnToPoint(-107, -62, 1000, {.maxSpeed = 80});
+	matchloader.set_value(true);
 	chassis.moveToPoint(-107, -61, 1000, {.maxSpeed = 60, .minSpeed = 35});
 
-	matchloader.set_value(true);
 	intake_hold();
 
 	chassis.waitUntilDone();
@@ -236,13 +237,14 @@ void autonomous() {
 	chassis.turnToPoint(-99, 37, 800);
 	matchloader.set_value(false);
 
-	chassis.moveToPoint(-99, 38, 3000, {.maxSpeed = 80});
+	chassis.moveToPoint(-99, 37, 3000, {.maxSpeed = 80});
 	chassis.turnToPoint(-78, 42, 1000, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(-78, 42, 1000, {.forwards = false, .maxSpeed = 100});
+	chassis.moveToPoint(-78, 42, 1000, {.forwards = false, .maxSpeed = 60});
 	matchloader.set_value(true);
 
+	pros::delay(100);
 	outake();
-	pros::delay(200);
+	pros::delay(50);
 	intake_stop();
 
 	chassis.waitUntilDone();
@@ -250,18 +252,18 @@ void autonomous() {
 	pros::delay(2000);
 
 	// 4th Matchloader
-	chassis.moveToPoint(-112, 39, 1400, {.maxSpeed = 60, .minSpeed = 35});
+	chassis.moveToPoint(-112, 40, 1400, {.maxSpeed = 60, .minSpeed = 35});
 	intake_hold();
 
 	chassis.waitUntilDone();
 	pros::delay(1300);
 
 	// Score 4th Load
-	chassis.moveToPoint(-78, 41, 1400, {.forwards = false, .maxSpeed = 100});
+	chassis.moveToPoint(-78, 42, 1400, {.forwards = false, .maxSpeed = 60});
 	chassis.waitUntilDone();
 
 	outake();
-	pros::delay(200);
+	pros::delay(50);
 	intake_stop();
 
 	intake_score();
@@ -269,33 +271,34 @@ void autonomous() {
 
 	// 1st Block Group
 	matchloader.set_value(false);
-	chassis.moveToPoint(-104, 41, 1000, {.maxSpeed = 80});
+	chassis.moveToPoint(-104, 41, 1000);
 	chassis.turnToPoint(-78.5, 15, 800);
-	chassis.moveToPoint(-78.5, 15, 1500, {.maxSpeed = 60});
+	chassis.moveToPoint(-78.5, 15, 1500, {.maxSpeed = 80});
 	intake_hold();
 
 	// 2nd Block Group
-	chassis.turnToPoint(-30, 18, 800, {.maxSpeed = 80});
-	chassis.moveToPoint(-30, 18, 1500, {.maxSpeed = 60});
+	chassis.turnToPoint(-28, 18, 800);
+	chassis.moveToPoint(-28, 18, 1500, {.maxSpeed = 80});
 
 	// 3rd Block Group
-	chassis.turnToHeading(180, 800, {.maxSpeed = 80});
-	chassis.turnToPoint(-23, -30, 800, {.maxSpeed = 80});
-	chassis.moveToPoint(-23, -30, 1500, {.maxSpeed = 60});
+	chassis.turnToPoint(-26, -31, 800);
+	chassis.moveToPoint(-26, -31, 1500, {.maxSpeed = 80});
 
 	// Score Middle Goal
-	chassis.turnToPoint(-41.5, -19, 900, {.forwards = false, .maxSpeed = 80});
-	chassis.moveToPoint(-41.5, -19, 2500, {.forwards = false, .maxSpeed = 40});
+	chassis.turnToPoint(-42.5, -19, 900, {.forwards = false, .maxSpeed = 100});
+	chassis.moveToPoint(-42.5, -19, 2600, {.forwards = false, .maxSpeed = 40});
+	matchloader.set_value(true);
 	intake_stop();
 	trapdoor.set_value(true);
 
 	chassis.waitUntilDone();
 	outake();
-	pros::delay(100);
+	pros::delay(50);
 	intake_score();
 	pros::delay(2000);
 
 	// Park
+	matchloader.set_value(false);
 	chassis.moveToPoint(-16.5, -40.5, 1000, {.maxSpeed = 80});
 	chassis.turnToPoint(14, -40, 1000, {.maxSpeed = 80});
 	chassis.moveToPoint(14, -40, 1000, {.maxSpeed = 100});
@@ -311,11 +314,11 @@ void autonomous() {
 	drive_stop();
 
 	// Ending
-	chassis.waitUntilDone();
-	pros::delay(500);
-	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-	intake_stop();
-	matchloader.set_value(false);
+	// chassis.waitUntilDone();
+	// pros::delay(500);
+	// chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+	// intake_stop();
+	// matchloader.set_value(false);
 }
 
 void opcontrol() {
@@ -350,9 +353,18 @@ void opcontrol() {
 		/* ----------------------------- Intake Control ---------------------------- */
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-				// Intake to score
-				intake_bottom_speed = 127;
-				intake_top_speed = 127;
+
+				if (trapdoor_down) {
+					// Intake to score middle
+					intake_bottom_speed = 60;
+					intake_top_speed = 60;
+
+				} else {
+					// Intake to score long
+					intake_bottom_speed = 127;
+					intake_top_speed = 127;
+				}
+
 			} else {
 				// Intake to hold balls
 				intake_bottom_speed = 127;
