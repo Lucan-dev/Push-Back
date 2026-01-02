@@ -14,72 +14,16 @@ pros::MotorGroup right_drive({15, 4, 3}, pros::MotorGearset::blue);
 pros::MotorGroup intake({6, -5}, pros::MotorGearset::blue);
 
 /* --------------------------------- Sensors -------------------------------- */
-pros::Rotation vert(11);
 pros::IMU inertial(2);
 
 /* --------------------------------- Pistons -------------------------------- */
-pros::adi::DigitalOut matchloader('B');
-pros::adi::DigitalOut trapdoor('C');
-pros::adi::DigitalOut lift('D');
-pros::adi::DigitalOut descore('E');
-
-/* ----------------------------- Tracking Wheels ---------------------------- */
-lemlib::TrackingWheel vert_wheel(&vert, lemlib::Omniwheel::NEW_2, -0.9375);
-
-/* ---------------------------- Drivetrain Setup ---------------------------- */
-lemlib::Drivetrain drivetrain(
-	&left_drive,
-    &right_drive,
-    10.95,
-    lemlib::Omniwheel::NEW_4,
-    342.857,
-    2
-);
-
-lemlib::OdomSensors sensors(
-	&vert_wheel,
-    nullptr,
-    nullptr,
-    nullptr,
-    &inertial
-);
-
-/* ------------------------------- PID Values ------------------------------- */
-lemlib::ControllerSettings lateral_controller(
-    6.1,
-    0,
-    10,
-    3,
-    1,
-    100,
-    3,
-    500,
-    15
-);
-
-lemlib::ControllerSettings angular_controller(
-    2.15,
-    0,
-    22,
-    3,
-    1,
-    100,
-    3,
-    500,
-    7.6
-);
-
-/* ----------------------------- Create Chassis ----------------------------- */
-lemlib::Chassis chassis(
-    drivetrain,
-    lateral_controller,
-    angular_controller,
-    sensors
-);
+pros::adi::DigitalOut descore('D');
+pros::adi::DigitalOut lock('E');
+pros::adi::DigitalOut matchloader('F');
+pros::adi::DigitalOut trapdoor('G');
 
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
-bool trapdoor_down = false;
 bool descore_up = true;
 
 void initialize() {
@@ -91,18 +35,17 @@ void initialize() {
 
 	// Setup
 	pros::lcd::initialize();
-	chassis.calibrate();
 
 	// Brain Screen
-	pros::Task screen_task([&]() {
-		while (true) {
-			pros::lcd::print(2, "X: %f", chassis.getPose().x);
-			pros::lcd::print(3, "Y: %f", chassis.getPose().y);
-			pros::lcd::print(4, "Theta: %f", chassis.getPose().theta);
+	// pros::Task screen_task([&]() {
+	// 	while (true) {
+	// 		pros::lcd::print(2, "X: %f", chassis.getPose().x);
+	// 		pros::lcd::print(3, "Y: %f", chassis.getPose().y);
+	// 		pros::lcd::print(4, "Theta: %f", chassis.getPose().theta);
 
-			pros::delay(50);
-		}
-    });
+	// 		pros::delay(50);
+	// 	}
+    // });
 }
 
 void disabled() {}
@@ -119,7 +62,6 @@ void opcontrol() {
 
 	int intake_speed = 0;
 
-	lift.set_value(true);
 	descore.set_value(true);
 
 	// loop forever
@@ -156,15 +98,25 @@ void opcontrol() {
         intake.move(intake_speed);
 
 		/* --------------------------------- Pistons -------------------------------- */
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-			trapdoor_down = !trapdoor_down;
-			trapdoor.set_value(trapdoor_down);
+		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            lock.set_value(true);
 
-		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+        } else {
+            lock.set_value(false);
+        }
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            trapdoor.set_value(true);
+            
+        } else {
+            trapdoor.set_value(false);
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			matchloader_down = !matchloader_down;
 			matchloader.set_value(matchloader_down);
 
-		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 			descore_up = !descore_up;
 			descore.set_value(descore_up);
 		}
