@@ -15,37 +15,95 @@ pros::MotorGroup intake({6, -5}, pros::MotorGearset::blue);
 
 /* --------------------------------- Sensors -------------------------------- */
 pros::IMU inertial(2);
+pros::Rotation vert_tracker(9);
 
 /* --------------------------------- Pistons -------------------------------- */
 pros::adi::DigitalOut descore('D');
 pros::adi::DigitalOut lock('E');
-pros::adi::DigitalOut matchloader('F');
-pros::adi::DigitalOut trapdoor('G');
+pros::adi::DigitalOut trapdoor('F');
+pros::adi::DigitalOut matchloader('G');
+
+/* ----------------------------- Tracking Wheels ---------------------------- */
+lemlib::TrackingWheel vert_wheel(&vert_tracker, lemlib::Omniwheel::NEW_2, -0.5);
+
+/* ---------------------------- Drivetrain Setup ---------------------------- */
+lemlib::Drivetrain drivetrain(
+	&left_drive,
+    &right_drive,
+    10.875,
+    lemlib::Omniwheel::NEW_325,
+    450,
+    2
+);
+
+lemlib::OdomSensors sensors(
+	&vert_wheel,
+    nullptr,
+    nullptr,
+    nullptr,
+    &inertial
+);
+
+/* ------------------------------- PID Values ------------------------------- */
+lemlib::ControllerSettings lateral_controller(
+    6.5,
+    0,
+    10,
+    3,
+    1,
+    100,
+    3,
+    500,
+    0
+);
+
+lemlib::ControllerSettings angular_controller(
+    2.3,
+    0,
+    20,
+    3,
+    1,
+    100,
+    3,
+    500,
+    0
+);
+
+/* ----------------------------- Create Chassis ----------------------------- */
+lemlib::Chassis chassis(
+    drivetrain,
+    lateral_controller,
+    angular_controller,
+    sensors
+);
+
 
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
 bool descore_up = true;
 
+/* ------------------------------- Functions -------------------------------- */
 void initialize() {
 	// Motor Stopping
 	left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
     right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
 
-    intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    intake.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
 	// Setup
 	pros::lcd::initialize();
+	chassis.calibrate();
 
 	// Brain Screen
-	// pros::Task screen_task([&]() {
-	// 	while (true) {
-	// 		pros::lcd::print(2, "X: %f", chassis.getPose().x);
-	// 		pros::lcd::print(3, "Y: %f", chassis.getPose().y);
-	// 		pros::lcd::print(4, "Theta: %f", chassis.getPose().theta);
+	pros::Task screen_task([&]() {
+		while (true) {
+			pros::lcd::print(2, "X: %f", chassis.getPose().x);
+			pros::lcd::print(3, "Y: %f", chassis.getPose().y);
+			pros::lcd::print(4, "Theta: %f", chassis.getPose().theta);
 
-	// 		pros::delay(50);
-	// 	}
-    // });
+			pros::delay(50);
+		}
+    });
 }
 
 void disabled() {}
@@ -53,13 +111,11 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-
 }
 
 void opcontrol() {
 	/* -------------------------------- Variables ------------------------------- */
 	int dead_zone = 8;
-
 	int intake_speed = 0;
 
 	descore.set_value(true);
