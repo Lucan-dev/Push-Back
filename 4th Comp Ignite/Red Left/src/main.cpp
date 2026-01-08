@@ -16,6 +16,7 @@ pros::MotorGroup intake({6, -5}, pros::MotorGearset::blue);
 /* --------------------------------- Sensors -------------------------------- */
 pros::IMU inertial(2);
 pros::Rotation vert_tracker(9);
+pros::Optical intake_color(21);
 
 /* --------------------------------- Pistons -------------------------------- */
 pros::adi::DigitalOut descore('D');
@@ -80,7 +81,8 @@ lemlib::Chassis chassis(
 
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
-bool descore_up = true;
+bool descore_up = false;
+bool trapdoor_down = false;
 
 /* ------------------------------- Functions -------------------------------- */
 void initialize() {
@@ -110,7 +112,89 @@ void disabled() {}
 
 void competition_initialize() {}
 
+void wait_until_red() {
+    int current_hue = intake_color.get_hue();
+
+	while (current_hue > 15) {
+		current_hue = intake_color.get_hue();
+		pros::delay(50);
+	}
+}
+
+void wait_until_blue() {
+    intake_color.set_led_pwm(100);
+    pros::delay(100);
+    int current_hue = intake_color.get_hue();
+
+	while (current_hue < 100) {
+		current_hue = intake_color.get_hue();
+		pros::delay(50);
+	}
+
+    intake_color.set_led_pwm(0);
+}
+
 void autonomous() {
+    // Group of 3 blocks
+	intake.move(127);
+    chassis.moveToPoint(0, 29, 2000, {.maxSpeed = 40});
+    chassis.waitUntil(20);
+    matchloader.set_value(true);
+
+    // Score in middle goal
+    chassis.turnToPoint(15, 35.5, 1000, {.forwards = false});
+    chassis.moveToPoint(15, 35.5, 1000, {.forwards = false, .maxSpeed = 80});
+    chassis.turnToHeading(-120, 400);
+
+    chassis.waitUntilDone();
+    intake.move(-127);
+
+    pros::delay(200);
+    trapdoor.set_value(true);
+    intake.move(100);
+
+    pros::delay(1000);
+    intake.brake();
+
+    // Matchloader
+    chassis.moveToPoint(-33, 8.5, 1500, {.maxSpeed = 100});
+
+    pros::delay(40);
+    trapdoor.set_value(false);
+
+    chassis.turnToPoint(-36.5, -1, 1000, {.maxSpeed = 100});
+    chassis.moveToPoint(-36.5, -1, 1200, {.maxSpeed = 60, .minSpeed = 15});
+
+    intake.move(127);
+    pros::delay(1400);
+    
+    // Score in long goal
+    chassis.moveToPoint(-27, 30, 2000, {.forwards = false, .maxSpeed = 80});
+    chassis.waitUntilDone();
+    lock.set_value(true);
+
+    intake.move(-100);
+    pros::delay(200);
+    intake.move(127);
+
+    wait_until_blue();
+    intake.brake();
+
+    // Wing push
+    chassis.moveToPoint(-41.5, 6, 1000, {.maxSpeed = 100});
+    matchloader.set_value(false);
+
+    chassis.turnToPoint(-39, 33, 1000, {.forwards = false});
+    chassis.moveToPoint(-39, 33, 1200, {.forwards = false, .maxSpeed = 100});
+
+    chassis.turnToPoint(-32.5, 48, 800, {.forwards = false});
+    chassis.moveToPoint(-32.5, 48, 3000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20});
+
+    // Ending
+    chassis.waitUntilDone();
+    pros::delay(200);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    intake.brake();
 }
 
 void opcontrol() {
@@ -119,6 +203,7 @@ void opcontrol() {
 	int intake_speed = 0;
 
 	descore.set_value(true);
+    descore_up = true;
 
 	// loop forever
     while (true) {
@@ -161,11 +246,9 @@ void opcontrol() {
             lock.set_value(false);
         }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            trapdoor.set_value(true);
-            
-        } else {
-            trapdoor.set_value(false);
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            trapdoor_down = !trapdoor_down;
+            trapdoor.set_value(trapdoor_down);
         }
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
