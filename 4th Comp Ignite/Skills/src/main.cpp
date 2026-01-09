@@ -159,7 +159,7 @@ void autonomous() {
     chassis.moveToPoint(13, 40, 1200, {.maxSpeed = 60, .minSpeed = 10});
 
     chassis.waitUntilDone();
-    pros::delay(1200);
+    pros::delay(1500);
 
     // Score 1st load
     chassis.moveToPoint(1, 40, 1000, {.forwards = false});
@@ -167,10 +167,10 @@ void autonomous() {
     chassis.moveToPoint(-19, 52, 1000, {.forwards = false, .maxSpeed = 80});
 
     chassis.turnToPoint(-91, 50, 800, {.forwards = false});
+    intake.brake();
     chassis.moveToPoint(-91, 50, 2500, {.forwards = false, .maxSpeed = 80});
 
     chassis.waitUntilDone();
-    intake.brake();
     matchloader.set_value(false);
     pros::delay(200);
 
@@ -181,40 +181,118 @@ void autonomous() {
     chassis.moveToPoint(-79, 37.5, 1000, {.forwards = false,.maxSpeed = 80});
     matchloader.set_value(true);
 
-    intake.move(-127);
-    pros::delay(200);
-    intake.brake();
-
     chassis.waitUntilDone();
+    intake.move(-127);
+    pros::delay(150);
+
     lock.set_value(true);
     intake.move(127);
 
-    pros::delay(2000);
+    pros::delay(3000);
     lock.set_value(false);
 
     // 2nd matchloader
     chassis.moveToPoint(-112, 36.5, 1000, {.maxSpeed = 60, .minSpeed = 10});
     chassis.waitUntilDone();
-    pros::delay(1200);
+    pros::delay(1500);
 
     // Score 2nd load
     chassis.moveToPoint(-79, 37.5, 1000, {.forwards = false, .maxSpeed = 80});
 
     chassis.waitUntilDone();
     intake.move(-127);
-    pros::delay(200);
+    pros::delay(150);
 
     lock.set_value(true);
     intake.move(127);
-    pros::delay(2000);
+    pros::delay(3000);
     lock.set_value(false);
 
     // 3rd matchloader
     chassis.moveToPoint(-93, 37.5, 800);
+    intake.brake();
     matchloader.set_value(false);
 
-    chassis.turnToPoint(-93, -63, 800);
-    chassis.moveToPoint(-93, -63, 2500, {.maxSpeed = 80});
+    chassis.turnToPoint(-94, -62, 800);
+    chassis.moveToPoint(-94, -62, 2500, {.maxSpeed = 80});
+
+    chassis.turnToPoint(-113, -62, 800);
+    chassis.waitUntilDone();
+    matchloader.set_value(true);
+    intake.move(127);
+
+    pros::delay(200);
+    chassis.moveToPoint(-113, -62, 1200, {.maxSpeed = 60, .minSpeed = 10});
+
+    chassis.waitUntilDone();
+    pros::delay(1500);
+
+    // Score 3rd load
+    chassis.moveToPoint(-101, -63.5, 800, {.forwards = false});
+    chassis.turnToPoint(-81, -75.5,800, {.forwards = false});
+    chassis.moveToPoint(-81, -75.5, 1500, {.forwards = false, .maxSpeed = 100});
+
+    chassis.turnToPoint(-11, -75.5, 800, {.forwards = false});
+    intake.brake();
+    chassis.moveToPoint(-11, -75.5, 2500, {.forwards = false, .maxSpeed = 80});
+
+    chassis.waitUntilDone();
+    matchloader.set_value(false);
+    pros::delay(200);
+
+    chassis.turnToPoint(-11, -63, 800, {.forwards = false});
+    chassis.moveToPoint(-11, -63, 800, {.forwards = false});
+
+    chassis.turnToPoint(-23, -63, 800, {.forwards = false});
+    chassis.moveToPoint(-23, -63, 1000, {.forwards = false,.maxSpeed = 80});
+    matchloader.set_value(true);
+
+    chassis.waitUntilDone();
+    intake.move(-127);
+    pros::delay(150);
+
+    lock.set_value(true);
+    intake.move(127);
+
+    pros::delay(3000);
+    lock.set_value(false);
+
+    // 4th matchloader
+    chassis.moveToPoint(10, -63, 1000, {.maxSpeed = 60});
+    chassis.waitUntilDone();
+    pros::delay(1500);
+
+    // Score 4th load
+    chassis.moveToPoint(-23, -63, 1000, {.forwards = false, .maxSpeed = 80});
+    chassis.waitUntilDone();
+    intake.move(-127);
+    pros::delay(150);
+
+    lock.set_value(true);
+    intake.move(127);
+    pros::delay(3000);
+    lock.set_value(false);
+
+    // Park
+    matchloader.set_value(false);
+    intake.brake();
+    chassis.moveToPoint(-11.5, -63.5, 800);
+    
+    chassis.turnToPoint(-8.6, -14.5, 800);
+    chassis.moveToPoint(-8.5, -14.5, 2000, {.maxSpeed = 80});
+
+    chassis.turnToPoint(1, -14, 1000);
+    chassis.moveToPoint(1, -14, 1500, {.maxSpeed = 80});
+    chassis.waitUntilDone();
+    descore.set_value(true);
+
+    left_drive.move(80);
+    right_drive.move(80);
+
+    pros::delay(1500);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+    left_drive.brake();
+    right_drive.brake();
 
     // Ending
     chassis.waitUntilDone();
