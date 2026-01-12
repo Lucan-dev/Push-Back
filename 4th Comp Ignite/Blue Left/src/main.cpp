@@ -159,11 +159,11 @@ void autonomous() {
     // Matchloader
     chassis.moveToPoint(-33, 8.5, 1500, {.maxSpeed = 100});
 
-    pros::delay(40);
+    pros::delay(200);
     trapdoor.set_value(false);
 
-    chassis.turnToPoint(-36.5, -1, 1000, {.maxSpeed = 100});
-    chassis.moveToPoint(-36.5, -1, 1200, {.maxSpeed = 60, .minSpeed = 15});
+    chassis.turnToPoint(-36.5, -2, 1000, {.maxSpeed = 100});
+    chassis.moveToPoint(-36.5, -2, 1200, {.maxSpeed = 60, .minSpeed = 15});
 
     intake.move(127);
     pros::delay(1400);

@@ -137,38 +137,42 @@ void wait_until_blue() {
 void autonomous() {
     // Group of 3 blocks
 	intake.move(127);
-    chassis.moveToPoint(0, 29, 2000, {.maxSpeed = 40});
-    chassis.waitUntil(20);
+    chassis.moveToPoint(0, 29, 2000, {.maxSpeed = 80});
+    chassis.waitUntil(15);
     matchloader.set_value(true);
     matchloader_down = true;
 
     // Matchloader
-    chassis.turnToPoint(31, 8, 1000);
-    chassis.moveToPoint(31, 8, 1500, {.maxSpeed = 100});
+    chassis.turnToPoint(31, 8, 800, {.minSpeed = 5});
+    chassis.moveToPoint(31, 8, 1500, {.minSpeed = 10});
 
-    chassis.turnToPoint(35, -2, 1000, {.maxSpeed = 100});
-    chassis.moveToPoint(35, -2, 1200, {.maxSpeed = 60, .minSpeed = 15});
+    chassis.turnToPoint(35, -2, 800, {.minSpeed = 10});
+    chassis.moveToPoint(35, -2, 1200, {.maxSpeed = 100, .minSpeed = 15});
 
     intake.move(127);
     pros::delay(1400);
     
     // Score in long goal
-    chassis.moveToPoint(26, 29, 2000, {.forwards = false, .maxSpeed = 80});
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+    chassis.moveToPoint(26, 29, 2000, {.forwards = false, .minSpeed = 20});
+    chassis.waitUntil(20);
+
+    intake.move(-127);
+    pros::delay(100);
+    intake.brake();
+
     chassis.waitUntilDone();
     lock.set_value(true);
-
-    intake.move(-100);
-    pros::delay(200);
     intake.move(127);
 
-    wait_until_red();
-    intake.brake();
+    // wait_until_red();
+    // intake.brake();
 
     // Ending
-    chassis.waitUntilDone();
-    pros::delay(200);
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    intake.brake();
+    // chassis.waitUntilDone();
+    // pros::delay(200);
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // intake.brake();
 }
 
 void opcontrol() {

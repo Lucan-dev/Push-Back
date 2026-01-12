@@ -149,14 +149,14 @@ void intake_score() {}
 void autonomous() {
     // 1st matchloader
     chassis.moveToPoint(0, 39, 1500, {.maxSpeed = 80});
-    chassis.turnToPoint(13, 40, 1000);
+    chassis.turnToPoint(14, 40, 1000);
 
     chassis.waitUntilDone();
     matchloader.set_value(true);
     intake.move(127);
 
     pros::delay(200);
-    chassis.moveToPoint(13, 40, 1200, {.maxSpeed = 60, .minSpeed = 10});
+    chassis.moveToPoint(14, 40, 1500, {.maxSpeed = 60, .minSpeed = 10});
 
     chassis.waitUntilDone();
     pros::delay(1500);
@@ -192,7 +192,7 @@ void autonomous() {
     lock.set_value(false);
 
     // 2nd matchloader
-    chassis.moveToPoint(-112, 36.5, 1000, {.maxSpeed = 60, .minSpeed = 10});
+    chassis.moveToPoint(-113, 36.5, 1500, {.maxSpeed = 60, .minSpeed = 10});
     chassis.waitUntilDone();
     pros::delay(1500);
 
@@ -216,13 +216,13 @@ void autonomous() {
     chassis.turnToPoint(-94, -62, 800);
     chassis.moveToPoint(-94, -62, 2500, {.maxSpeed = 80});
 
-    chassis.turnToPoint(-113, -62, 800);
+    chassis.turnToPoint(-114, -62, 800);
     chassis.waitUntilDone();
     matchloader.set_value(true);
     intake.move(127);
 
     pros::delay(200);
-    chassis.moveToPoint(-113, -62, 1200, {.maxSpeed = 60, .minSpeed = 10});
+    chassis.moveToPoint(-114, -62, 1500, {.maxSpeed = 60, .minSpeed = 10});
 
     chassis.waitUntilDone();
     pros::delay(1500);
@@ -258,7 +258,7 @@ void autonomous() {
     lock.set_value(false);
 
     // 4th matchloader
-    chassis.moveToPoint(10, -63, 1000, {.maxSpeed = 60});
+    chassis.moveToPoint(11, -63, 1500, {.maxSpeed = 60});
     chassis.waitUntilDone();
     pros::delay(1500);
 

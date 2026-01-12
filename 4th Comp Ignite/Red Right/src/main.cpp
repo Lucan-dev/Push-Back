@@ -165,10 +165,10 @@ void autonomous() {
     intake.brake();
 
     // Ending
-    chassis.waitUntilDone();
-    pros::delay(200);
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    intake.brake();
+    // chassis.waitUntilDone();
+    // pros::delay(200);
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // intake.brake();
 }
 
 void opcontrol() {
