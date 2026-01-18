@@ -20,8 +20,8 @@ pros::Optical intake_color(21);
 
 /* --------------------------------- Pistons -------------------------------- */
 pros::adi::DigitalOut descore('D');
-pros::adi::DigitalOut lock_bottom('E');
-pros::adi::DigitalOut lock_top('F');
+pros::adi::DigitalOut lock('E');
+pros::adi::DigitalOut trapdoor('F');
 pros::adi::DigitalOut matchloader('G');
 
 /* ----------------------------- Tracking Wheels ---------------------------- */
@@ -81,8 +81,8 @@ lemlib::Chassis chassis(
 
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
-bool descore_up = true;
-int lock_state = 0; // 0 = locked, 1 = long goal, 2 = mid goal
+bool descore_up = false;
+bool trapdoor_down = false;
 
 /* ------------------------------- Functions -------------------------------- */
 void initialize() {
@@ -112,7 +112,6 @@ void disabled() {}
 
 void competition_initialize() {}
 
-/* ---------------------------- Custom Functions ---------------------------- */
 void wait_until_red() {
     int current_hue = intake_color.get_hue();
 
@@ -135,28 +134,18 @@ void wait_until_blue() {
     intake_color.set_led_pwm(0);
 }
 
-void piston_locked() {
-    lock_bottom.set_value(false);
-    lock_top.set_value(false);
+void intake_hold() {
+    
 }
 
-void piston_long() {
-    lock_bottom.set_value(true);
-    lock_top.set_value(false);
+void outake() {
+
 }
 
-void piston_middle() {
-    lock_bottom.set_value(false);
-    lock_top.set_value(true);
-}
+void intake_stop() {}
 
-void intake_for(int velocity, int mseconds) {
-    intake.move(velocity);
-    pros::delay(mseconds);
-    intake.brake();
-}
+void intake_score() {}
 
-/* -------------------------- Competition Functions ------------------------- */
 void autonomous() {
     // 1st matchloader
     chassis.moveToPoint(0, 39, 1500, {.maxSpeed = 80});
@@ -193,31 +182,33 @@ void autonomous() {
     matchloader.set_value(true);
 
     chassis.waitUntilDone();
-    // intake.move(-127);
-    // pros::delay(150);
+    intake.move(-127);
+    pros::delay(150);
 
-    piston_long();
-    intake_for(127, 3000);
-    piston_locked();
+    lock.set_value(true);
+    intake.move(127);
+
+    pros::delay(3000);
+    lock.set_value(false);
 
     // 2nd matchloader
     chassis.moveToPoint(-113, 36.5, 1500, {.maxSpeed = 60, .minSpeed = 10});
-    intake.move(127);
     chassis.waitUntilDone();
     pros::delay(1500);
 
     // Score 2nd load
     chassis.moveToPoint(-79, 37.5, 1000, {.forwards = false, .maxSpeed = 80});
-    chassis.waitUntilDone();
-    // intake.move(-127);
-    // pros::delay(150);
 
-    piston_long();
-    intake_for(127, 3000);
-    piston_locked();
+    chassis.waitUntilDone();
+    intake.move(-127);
+    pros::delay(150);
+
+    lock.set_value(true);
+    intake.move(127);
+    pros::delay(3000);
+    lock.set_value(false);
 
     // 3rd matchloader
-    intake.move(127);
     chassis.moveToPoint(-93, 37.5, 800);
     intake.brake();
     matchloader.set_value(false);
@@ -257,28 +248,30 @@ void autonomous() {
     matchloader.set_value(true);
 
     chassis.waitUntilDone();
-    // intake.move(-127);
-    // pros::delay(150);
+    intake.move(-127);
+    pros::delay(150);
 
-    piston_long();
-    intake_for(127, 3000);
-    piston_locked();
+    lock.set_value(true);
+    intake.move(127);
+
+    pros::delay(3000);
+    lock.set_value(false);
 
     // 4th matchloader
     chassis.moveToPoint(11, -63, 1500, {.maxSpeed = 60});
-    intake.move(127);
     chassis.waitUntilDone();
     pros::delay(1500);
 
     // Score 4th load
     chassis.moveToPoint(-23, -63, 1000, {.forwards = false, .maxSpeed = 80});
     chassis.waitUntilDone();
-    // intake.move(-127);
-    // pros::delay(150);
+    intake.move(-127);
+    pros::delay(150);
 
-    piston_long();
-    intake_for(127, 3000);
-    piston_locked();
+    lock.set_value(true);
+    intake.move(127);
+    pros::delay(3000);
+    lock.set_value(false);
 
     // Park
     matchloader.set_value(false);
@@ -302,18 +295,17 @@ void autonomous() {
     right_drive.brake();
 
     // Ending
-    // chassis.waitUntilDone();
-    // pros::delay(200);
-    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    // intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    // intake.brake();
+    chassis.waitUntilDone();
+    pros::delay(200);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    intake.brake();
 }
 
 void opcontrol() {
 	/* -------------------------------- Variables ------------------------------- */
 	int dead_zone = 8;
 	int intake_speed = 0;
-
 
 	descore.set_value(true);
     descore_up = true;
@@ -339,7 +331,7 @@ void opcontrol() {
 
 		/* ----------------------------- Intake Control ---------------------------- */
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            if (lock_state == 2) {
+            if (trapdoor_down) {
                 intake_speed = 80;
             } else {
                 intake_speed = 127;
@@ -357,18 +349,16 @@ void opcontrol() {
         intake.move(intake_speed);
 
 		/* --------------------------------- Pistons -------------------------------- */
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-            if (lock_state == 2) {
-                lock_state = 0;
-            } else {
-                lock_state = 2;
-            }
+		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            lock.set_value(true);
 
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-            lock_state = 1;
+        } else {
+            lock.set_value(false);
+        }
 
-        } else if (lock_state != 2) {
-            lock_state = 0;
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            trapdoor_down = !trapdoor_down;
+            trapdoor.set_value(trapdoor_down);
         }
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
@@ -379,16 +369,6 @@ void opcontrol() {
 			descore_up = !descore_up;
 			descore.set_value(descore_up);
 		}
-
-        if (lock_state == 0) {
-            piston_locked();
-
-        } else if (lock_state == 1) {
-            piston_long();
-
-        } else {
-            piston_middle();
-        }
 
 		pros::delay(20);
 	}
