@@ -637,7 +637,7 @@
     "upload_options": {
       "icon": "pizza",
       "description": "1010X",
-      "slot": 4
+      "slot": 3
     },
     "use_early_access": true
   }
