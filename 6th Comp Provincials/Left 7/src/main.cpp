@@ -163,7 +163,6 @@ void autonomous() {
     chassis.moveToPoint(0, 29, 2000, {.maxSpeed = 80, .minSpeed = 5});
     chassis.waitUntil(15);
     matchloader.set_value(true);
-    matchloader_down = true;
 
     // Matchloader
     chassis.turnToPoint(-31, 8, 800, {.minSpeed = 5});
@@ -176,7 +175,7 @@ void autonomous() {
     intake_for(127, 300);
     
     // Score in long goal
-    chassis.moveToPoint(-26, 29, 1000, {.forwards = false, .minSpeed = 20});
+    chassis.moveToPoint(-27, 29, 1000, {.forwards = false, .minSpeed = 20});
 
     pros::delay(700);
     piston_long();
@@ -185,13 +184,13 @@ void autonomous() {
     matchloader.set_value(false);
     
     // Descore
-    chassis.setPose(0, 0, 0);
+    chassis.setPose(0, 0, chassis.getPose().theta + 164);
     chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 30, .earlyExitRange = 5});
     chassis.moveToPoint(10, 13, 800, {.minSpeed = 15});
 
     intake.brake();
     chassis.turnToHeading(3, 800, {.minSpeed = 15, .earlyExitRange = 2});
-    chassis.moveToPoint(7.5, -17, 15000, {.forwards = false, .minSpeed = 20});
+    chassis.moveToPoint(8, -17, 15000, {.forwards = false, .minSpeed = 20});
 
     // Hold position
     while (true) {
