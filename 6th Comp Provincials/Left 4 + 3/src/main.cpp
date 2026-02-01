@@ -213,7 +213,7 @@ void autonomous() {
 
     // Hold position
     while (true) {
-        if (chassis.getPose().theta > 0) {
+        if (chassis.getPose().theta > 180) {
             chassis.turnToHeading(180, 10000, {.minSpeed = 15});
         }
     }
