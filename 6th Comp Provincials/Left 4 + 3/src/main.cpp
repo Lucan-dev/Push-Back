@@ -177,21 +177,44 @@ void autonomous() {
     piston_long();
     intake.move(127);
     pros::delay(1000);
-    matchloader.set_value(false);
+
+    // Matchloader
+    chassis.setPose(0, 0, chassis.getPose().theta + 164);
+    chassis.moveToPoint(0, 30, 1000, {.maxSpeed = 80, .minSpeed = 15});
+
+    chassis.waitUntil(5);
+    piston_locked();
+
+    chassis.waitUntilDone();
+    pros::delay(400);
+
+    // Score middle goal
+    chassis.moveToPoint(0, 20, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.turnToPoint(-40.5, -19.5, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
+
+    chassis.moveToPoint(-40.5, -19.5, 1500, {.forwards = false, .maxSpeed = 100, .minSpeed = 10});
+    chassis.waitUntil(40);
+    chassis.cancelAllMotions();
+    chassis.moveToPoint(-40.5, -19.5, 1500, {.forwards = false, .maxSpeed = 40, .minSpeed = 10});
+
+    chassis.waitUntilDone();
+    piston_middle();
+    pros::delay(1000);
 
     // Descore
-    chassis.setPose(0, 0, 0);
-    chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 30, .earlyExitRange = 5});
-    chassis.moveToPoint(10, 13, 800, {.minSpeed = 15});
-
+    chassis.moveToPoint(-12.7, 10.5, 1500, {.minSpeed = 10});
+    chassis.waitUntil(5);
+    piston_locked();
     intake.brake();
-    chassis.turnToHeading(3, 800, {.minSpeed = 15, .earlyExitRange = 2});
-    chassis.moveToPoint(7.5, -17, 15000, {.forwards = false, .minSpeed = 20});
-    
+    matchloader.set_value(false);
+
+    chassis.turnToHeading(181, 800);
+    chassis.moveToPoint(-11.5, -22, 1500, {.maxSpeed = 100, .minSpeed = 20});
+
     // Hold position
     while (true) {
         if (chassis.getPose().theta > 0) {
-            chassis.turnToHeading(0, 10000, {.minSpeed = 15});
+            chassis.turnToHeading(180, 10000, {.minSpeed = 15});
         }
     }
 }
