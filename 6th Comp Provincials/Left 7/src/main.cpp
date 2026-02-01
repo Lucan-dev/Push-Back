@@ -183,7 +183,7 @@ void autonomous() {
     intake.move(127);
     pros::delay(1800);
     matchloader.set_value(false);
-
+    
     // Descore
     chassis.setPose(0, 0, 0);
     chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 30, .earlyExitRange = 5});
@@ -191,8 +191,8 @@ void autonomous() {
 
     intake.brake();
     chassis.turnToHeading(3, 800, {.minSpeed = 15, .earlyExitRange = 2});
-    chassis.moveToPoint(7.5, -16, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
-    
+    chassis.moveToPoint(7.5, -17, 15000, {.forwards = false, .minSpeed = 20});
+
     // Hold position
     while (true) {
         if (chassis.getPose().theta > 0) {
