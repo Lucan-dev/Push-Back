@@ -81,7 +81,7 @@ lemlib::Chassis chassis(
 
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
-bool descore_up = true;
+bool descore_up = false;
 int lock_state = 0; // 0 = locked, 1 = long goal, 2 = mid goal
 
 /* ------------------------------- Functions -------------------------------- */
@@ -170,34 +170,41 @@ void autonomous() {
     chassis.moveToPoint(31, 8, 1500, {.minSpeed = 10});
 
     chassis.turnToPoint(36, -3, 600, {.minSpeed = 15});
-    chassis.moveToPoint(36, -3, 1300, {.maxSpeed = 100, .minSpeed = 15});
+    chassis.moveToPoint(36, -3, 900, {.maxSpeed = 100, .minSpeed = 15});
 
     chassis.waitUntilDone();
-    intake_for(127, 600);
+    intake_for(127, 400);
     
     // Score in long goal
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.moveToPoint(26, 29, 1000, {.forwards = false, .minSpeed = 20});
-    
-    intake.move(127);
-    chassis.waitUntilDone();
-    piston_long();
 
-    // Ending
-    // chassis.waitUntilDone();
-    // pros::delay(200);
-    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    // intake.brake();
+    pros::delay(700);
+    piston_long();
+    intake.move(127);
+    pros::delay(1800);
+    matchloader.set_value(false);
+
+    // Descore
+    chassis.setPose(0, 0, 0);
+    chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 30, .earlyExitRange = 5});
+    chassis.moveToPoint(10, 13, 800, {.minSpeed = 15});
+
+    intake.brake();
+    chassis.turnToHeading(4, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    chassis.moveToPoint(7, -16, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
+    
+    // Hold position
+    while (true) {
+        if (chassis.getPose().theta > 0) {
+            chassis.turnToHeading(0, 10000, {.minSpeed = 15});
+        }
+    }
 }
 
 void opcontrol() {
 	/* -------------------------------- Variables ------------------------------- */
 	int dead_zone = 8;
 	int intake_speed = 0;
-
-
-	descore.set_value(true);
-    descore_up = true;
 
 	// loop forever
     while (true) {
