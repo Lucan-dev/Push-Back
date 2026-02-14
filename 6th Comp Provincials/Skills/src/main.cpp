@@ -188,16 +188,16 @@ void autonomous() {
     // Get 1 blue block
     chassis.swingToPoint(10, -30, lemlib::DriveSide::RIGHT, 800, {.forwards = false});
     chassis.moveToPoint(10, -30, 1000, {.forwards = false,.maxSpeed = 80});
-    chassis.turnToPoint(17, -32.1, 800);
+    chassis.turnToPoint(17.5, -32, 800);
     intake.move(127);
 
-    chassis.moveToPoint(17, -32.1, 900, {.maxSpeed = 60});
+    chassis.moveToPoint(17.5, -32, 900, {.maxSpeed = 60});
 
     // Score on mid goal
-    chassis.turnToPoint(9, -40, 800, {.forwards = false});
-    chassis.moveToPoint(9, -40, 800, {.forwards = false});
+    chassis.turnToPoint(10, -41, 800, {.forwards = false});
+    chassis.moveToPoint(10, -41, 800, {.forwards = false});
     chassis.turnToHeading(45, 200, {.minSpeed = 5});
-    chassis.moveToPoint(9, -40, 200, {.forwards = false});
+    chassis.moveToPoint(10, -41, 200, {.forwards = false});
 
     chassis.waitUntilDone();
     intake.brake();
@@ -219,13 +219,13 @@ void autonomous() {
 
     // Get 3 block group
     pros::delay(100);
-    chassis.moveToPoint(49, -1, 2000, {.maxSpeed = 100});
+    chassis.moveToPoint(51, -1, 2000, {.maxSpeed = 100});
     chassis.waitUntil(4);
     intake.move(127);
 
     // Long goal
-    chassis.turnToPoint(49.5, -22, 800, {.forwards = false});
-    chassis.moveToPoint(49.5, -22, 1200, {.forwards = false, .minSpeed = 10});
+    chassis.turnToPoint(52, -22, 800, {.forwards = false});
+    chassis.moveToPoint(52, -22, 1200, {.forwards = false, .minSpeed = 10});
 
     pros::delay(800);
     piston_long();
@@ -249,40 +249,64 @@ void autonomous() {
     chassis.turnToPoint(-12.5, 6.6, 800, {.forwards = false});
     chassis.moveToPoint(-12.5, 6.6, 800, {.forwards = false});
 
-    chassis.turnToPoint(-13, -74, 800, {.forwards = false});
-    chassis.moveToPoint(-13, -74, 2000, {.forwards = false, .maxSpeed = 90});
+    chassis.turnToPoint(-12.2, -74.5, 800, {.forwards = false});
+    chassis.moveToPoint(-12.2, -74.5, 2000, {.forwards = false, .maxSpeed = 90});
 
-    chassis.turnToPoint(0, -74.4, 800, {.forwards = false});
-    chassis.moveToPoint(0, -74.4, 800, {.forwards = false});
-
-    chassis.turnToHeading(180, 800);
+    chassis.turnToPoint(1.5, -74.5, 800, {.forwards = false});
+    chassis.moveToPoint(1.5, -74.5, 800, {.forwards = false});
 
     chassis.turnToPoint(0, -58, 800, {.forwards = false});
-    chassis.moveToPoint(0, -58, 800, {.forwards = false, .minSpeed = 10});
+    // chassis.moveToPoint(0, -58, 800, {.forwards = false, .minSpeed = 10});
 
-    pros::delay(600);
-    piston_long();
-    intake.move(127);
+    // pros::delay(600);
+    // piston_long();
+    // intake.move(127);
 
-    pros::delay(2000);
-    chassis.setPose({0, 0, chassis.getPose().theta});
+    // pros::delay(2000);
+    // chassis.setPose({0, 0, chassis.getPose().theta});
 
-    // 2nd matchloader
-    chassis.moveToPoint(-2.84, -32, 1200, {.maxSpeed = 60, .minSpeed = 10});
-    piston_locked();
+    // // 2nd matchloader
+    // chassis.moveToPoint(-2.84, -32, 1200, {.maxSpeed = 60, .minSpeed = 10});
+    // piston_locked();
 
-    chassis.waitUntilDone();
-    pros::delay(1200);
+    // chassis.waitUntilDone();
+    // pros::delay(1200);
 
-    // Score 2nd load
-    chassis.moveToPoint(0, 2, 1000, {.forwards = false, .minSpeed = 10});
+    // // Score 2nd load
+    // chassis.moveToPoint(0, 2, 1000, {.forwards = false, .minSpeed = 10});
 
-    pros::delay(800);
-    piston_long();
-    intake.move(127);
+    // pros::delay(800);
+    // piston_long();
+    // intake.move(127);
 
-    pros::delay(2000);
-    chassis.setPose({0, 0, chassis.getPose().theta});
+    // pros::delay(2000);
+    // chassis.setPose({0, 0, chassis.getPose().theta});
+
+    // // Cross field
+    // chassis.setPose({0, 0, 180});
+    // intake.move(127);
+    // chassis.moveToPoint(-0.6, -11, 800);
+    // matchloader.set_value(false);
+    // piston_locked();
+
+    // chassis.turnToPoint(-98, -11, 800);
+    // chassis.moveToPoint(-98, -11, 3000, {.maxSpeed = 80});
+
+    // // 3rd matchloader
+    // chassis.turnToPoint(-101.5, -33, 800);
+    // chassis.waitUntilDone();
+
+    // matchloader.set_value(true);
+    // chassis.moveToPoint(-101.5, -28, 1000, {.maxSpeed = 60, .minSpeed = 10});
+
+    // chassis.waitUntilDone();
+    // pros::delay(1200);
+
+    // // Score 4th load
+    // chassis.moveToPoint(-101, -18.5, 1000, {.forwards = false});
+    // chassis.turnToPoint(-90, 0, 800, {.forwards = false});
+    // chassis.moveToPoint(-90, 0, 800);
+    // chassis.turnToHeading(180, 800);
 
     // Ending
     pros::delay(2000);
