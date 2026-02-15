@@ -169,10 +169,10 @@ void autonomous() {
     chassis.moveToPoint(-31, 8, 1500, {.minSpeed = 10});
 
     chassis.turnToPoint(-36, -3, 600, {.minSpeed = 15});
-    chassis.moveToPoint(-36, -3, 800, {.maxSpeed = 100, .minSpeed = 15});
+    chassis.moveToPoint(-36, -3, 700, {.maxSpeed = 100, .minSpeed = 15});
 
     chassis.waitUntilDone();
-    intake_for(127, 300);
+    intake_for(127, 250);
     
     // Score in long goal
     chassis.moveToPoint(-27, 29, 1000, {.forwards = false, .minSpeed = 20});
@@ -190,7 +190,7 @@ void autonomous() {
 
     intake.brake();
     chassis.turnToHeading(3, 800, {.minSpeed = 15, .earlyExitRange = 2});
-    chassis.moveToPoint(8, -17, 15000, {.forwards = false, .minSpeed = 20});
+    chassis.moveToPoint(8, -17, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
 
     // Hold position
     while (true) {

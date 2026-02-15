@@ -17,7 +17,7 @@ pros::MotorGroup intake({6, -5}, pros::MotorGearset::blue);
 /* --------------------------------- Sensors -------------------------------- */
 pros::IMU inertial(2);
 pros::Rotation vert_tracker(9);
-pros::Optical intake_color(21);
+pros::Optical ground_color(10);
 
 /* --------------------------------- Pistons -------------------------------- */
 pros::adi::DigitalOut descore('D');
@@ -113,28 +113,6 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void wait_until_red() {
-    int current_hue = intake_color.get_hue();
-
-	while (current_hue > 15) {
-		current_hue = intake_color.get_hue();
-		pros::delay(50);
-	}
-}
-
-void wait_until_blue() {
-    intake_color.set_led_pwm(100);
-    pros::delay(100);
-    int current_hue = intake_color.get_hue();
-
-	while (current_hue < 100) {
-		current_hue = intake_color.get_hue();
-		pros::delay(50);
-	}
-
-    intake_color.set_led_pwm(0);
-}
-
 void piston_locked() {
     lock_bottom.set_value(false);
     lock_top.set_value(false);
@@ -154,6 +132,16 @@ void intake_for(int velocity, int mseconds) {
     intake.move(velocity);
     pros::delay(mseconds);
     intake.brake();
+}
+
+void wait_until_parked() {
+	ground_color.set_led_pwm(100);
+	int current_hue = ground_color.get_hue();
+
+	while (current_hue >= 30) {
+		current_hue = ground_color.get_hue();
+		pros::delay(30);
+	}
 }
 
 void autonomous() {
@@ -184,9 +172,10 @@ void autonomous() {
     right_drive.brake();
     pros::delay(50);
     chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(50);
 
     // Get 1 blue block
-    chassis.swingToPoint(10.5, -29, lemlib::DriveSide::RIGHT, 800, {.forwards = false});
+    chassis.swingToPoint(10.5, -29, lemlib::DriveSide::RIGHT, 800, {.forwards = false, .minSpeed = 10});
     chassis.moveToPoint(10.5, -29, 1200, {.forwards = false, .maxSpeed = 80});
     chassis.turnToPoint(19.2, -31.2, 1200, {.maxSpeed = 60});
 
@@ -194,122 +183,190 @@ void autonomous() {
 
     // Score on mid goal
     chassis.turnToPoint(10, -41, 800, {.forwards = false});
-    chassis.moveToPoint(10, -41, 800, {.forwards = false});
+    chassis.moveToPoint(10, -41, 700, {.forwards = false});
 
-    chassis.turnToHeading(45, 300, {.minSpeed = 5}, false);
-    chassis.moveToPoint(10, -41, 300, {.forwards = false}, false);
+    pros::delay(600);
 
     intake.brake();
     piston_middle();
     pros::delay(100);
 
     intake.move(85);
+    chassis.turnToHeading(45, 300, {.minSpeed = 5}, false);
     pros::delay(400);
 
     intake.move(80);
+    chassis.moveToPoint(10, -41, 300, {.forwards = false}, false);
     pros::delay(400);
 
     intake.move(69);
-    pros::delay(1000);
+    pros::delay(800);
 
     intake.move(60);
-    pros::delay(1200);
+    pros::delay(1000);
+    chassis.moveToPoint(52, -1, 100, {.maxSpeed = 40});
     piston_locked();
 
     // Get 3 block group
-    chassis.moveToPoint(50, -1, 2000, {.maxSpeed = 100});
+    chassis.moveToPoint(52, -1, 2000, {.maxSpeed = 100});
     chassis.waitUntil(4);
     intake.move(127);
 
     // Long goal
-    chassis.turnToPoint(51, -20, 800, {.forwards = false});
-    chassis.moveToPoint(51, -20, 1200, {.forwards = false, .minSpeed = 10});
+    chassis.turnToPoint(52.5, -20, 800, {.forwards = false});
+    chassis.moveToPoint(52.5, -20, 1000, {.forwards = false, .minSpeed = 10});
 
-    pros::delay(800);
+    pros::delay(600);
     piston_long();
-    intake.move(127);
 
-    pros::delay(800);
+    chassis.turnToHeading(0, 300, {.minSpeed = 20});
+    chassis.moveToPoint(51.5, -20, 300, {.minSpeed = 20});
+    pros::delay(500);
 
     // 1st matchloader
     chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(50);
 
     matchloader.set_value(true);
-    // chassis.moveToPoint(-0.7, 33, 1200, {.maxSpeed = 60, .minSpeed = 10});
-    // chassis.waitUntil(5);
-    // piston_locked();
+    chassis.moveToPoint(-1.5, 32, 1200, {.maxSpeed = 60, .minSpeed = 10});
+    chassis.waitUntil(5);
+    piston_locked();
 
-    // chassis.waitUntilDone();
-    // pros::delay(1200);
+    chassis.waitUntilDone();
+    pros::delay(1300);
 
-    // // Got to score
-    // chassis.moveToPoint(-0.7, 19, 1000, {.forwards = false});
-    // chassis.turnToPoint(-12.5, 6.6, 800, {.forwards = false});
-    // chassis.moveToPoint(-12.5, 6.6, 800, {.forwards = false});
+    // Got to score
+    chassis.moveToPoint(-1.1, 19, 1000, {.forwards = false});
+    chassis.turnToPoint(-12.5, 6.6, 800, {.forwards = false});
+    chassis.moveToPoint(-12.5, 6.6, 800, {.forwards = false});
 
-    // chassis.turnToPoint(-12.2, -74.5, 800, {.forwards = false});
-    // chassis.moveToPoint(-12.2, -74.5, 2000, {.forwards = false, .maxSpeed = 90});
+    chassis.turnToPoint(-11.5, -73, 800, {.forwards = false});
+    chassis.moveToPoint(-11.5, -73, 2000, {.forwards = false, .maxSpeed = 100});
 
-    // chassis.turnToPoint(1.5, -74.5, 800, {.forwards = false});
-    // chassis.moveToPoint(1.5, -74.5, 800, {.forwards = false});
+    chassis.turnToPoint(1.5, -74.5, 800, {.forwards = false});
+    chassis.moveToPoint(1.5, -74.5, 800, {.forwards = false});
 
-    // chassis.turnToPoint(0, -58, 800, {.forwards = false});
-    // chassis.moveToPoint(0, -58, 800, {.forwards = false, .minSpeed = 10});
+    chassis.turnToPoint(1, -58, 800, {.forwards = false});
+    chassis.moveToPoint(1, -58, 800, {.forwards = false, .minSpeed = 10});
 
-    // pros::delay(600);
-    // piston_long();
-    // intake.move(127);
+    pros::delay(400);
+    piston_long();
 
-    // pros::delay(2000);
-    // chassis.setPose({0, 0, chassis.getPose().theta});
+    chassis.turnToHeading(180, 400, {.minSpeed = 20});
+    chassis.moveToPoint(1.5, -58, 400, {.forwards = false, .minSpeed = 20});
 
-    // // 2nd matchloader
-    // chassis.moveToPoint(-2.84, -32, 1200, {.maxSpeed = 60, .minSpeed = 10});
-    // piston_locked();
+    pros::delay(1500);
+    chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(50);
 
-    // chassis.waitUntilDone();
-    // pros::delay(1200);
+    // 2nd matchloader
+    chassis.moveToPoint(-1.5, -33, 1200, {.maxSpeed = 60, .minSpeed = 10});
+    piston_locked();
 
-    // // Score 2nd load
-    // chassis.moveToPoint(0, 2, 1000, {.forwards = false, .minSpeed = 10});
+    chassis.waitUntilDone();
+    pros::delay(1300);
 
-    // pros::delay(800);
-    // piston_long();
-    // intake.move(127);
+    // Score 2nd load
+    chassis.moveToPoint(0, 2, 1000, {.forwards = false, .minSpeed = 10});
 
-    // pros::delay(2000);
-    // chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(800);
+    piston_long();
 
-    // // Cross field
-    // chassis.setPose({0, 0, 180});
-    // intake.move(127);
-    // chassis.moveToPoint(-0.6, -11, 800);
-    // matchloader.set_value(false);
-    // piston_locked();
+    chassis.turnToHeading(180, 400, {.minSpeed = 20});
+    chassis.moveToPoint(0, 2, 400, {.forwards = false, .minSpeed = 20});
 
-    // chassis.turnToPoint(-98, -11, 800);
-    // chassis.moveToPoint(-98, -11, 3000, {.maxSpeed = 80});
+    pros::delay(1500);
+    chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(50);
 
-    // // 3rd matchloader
-    // chassis.turnToPoint(-101.5, -33, 800);
-    // chassis.waitUntilDone();
+    // Cross field
+    chassis.moveToPoint(0, -12.5, 800);
+    matchloader.set_value(false);
+    piston_locked();
 
-    // matchloader.set_value(true);
-    // chassis.moveToPoint(-101.5, -28, 1000, {.maxSpeed = 60, .minSpeed = 10});
+    chassis.turnToPoint(-99, -14, 800);
+    chassis.moveToPoint(-99, -14, 3000, {.maxSpeed = 100});
 
-    // chassis.waitUntilDone();
-    // pros::delay(1200);
+    // 3rd matchloader
+    chassis.turnToPoint(-100.5, -33, 800);
+    chassis.waitUntilDone();
 
-    // // Score 4th load
-    // chassis.moveToPoint(-101, -18.5, 1000, {.forwards = false});
-    // chassis.turnToPoint(-90, 0, 800, {.forwards = false});
-    // chassis.moveToPoint(-90, 0, 800, {.forwards = false});
-    // chassis.turnToHeading(180, 800);
+    matchloader.set_value(true);
+    chassis.moveToPoint(-100.5, -33, 1000, {.maxSpeed = 60, .minSpeed = 10});
 
-    // Ending
-    pros::delay(2000);
-    intake.brake();
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    chassis.waitUntilDone();
+    pros::delay(1300);
+
+    // Score 3rd load
+    chassis.moveToPoint(-100.5, -22.5, 1000, {.forwards = false});
+    chassis.turnToPoint(-88, -13, 800, {.forwards = false});
+    chassis.moveToPoint(-88, -13, 800, {.forwards = false});
+    
+    chassis.turnToPoint(-87, 74, 800, {.forwards = false});
+    chassis.moveToPoint(-87, 74, 2000, {.forwards = false, .maxSpeed = 100});
+
+    chassis.turnToPoint(-101, 74, 800);
+    chassis.moveToPoint(-101, 74, 800);
+
+    chassis.turnToPoint(-100.5, 58, 800, {.forwards = false});
+    chassis.moveToPoint(-100.5, 58, 800, {.forwards = false, .minSpeed = 20});
+
+    pros::delay(600);
+    piston_long();
+
+    chassis.turnToHeading(0, 400, {.minSpeed = 20});
+    chassis.moveToPoint(-100.5, 58, 400, {.forwards = false, .minSpeed = 20});
+
+    pros::delay(1500);
+    chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(50);
+
+    // 4th matchloader
+    chassis.moveToPoint(0.5, 32, 1200, {.maxSpeed = 60, .minSpeed = 10});
+    piston_locked();
+
+    chassis.waitUntilDone();
+    pros::delay(1300);
+
+    // Score 4th load
+    chassis.moveToPoint(0, -2, 1000, {.forwards = false, .minSpeed = 10});
+
+    pros::delay(800);
+    piston_long();
+
+    chassis.turnToHeading(0, 400, {.minSpeed = 20});
+    chassis.moveToPoint(0, -2, 400, {.forwards = false, .minSpeed = 20});
+
+    pros::delay(1200);
+    chassis.setPose({0, 0, chassis.getPose().theta});
+    pros::delay(50);
+
+    // Go to park
+    matchloader.set_value(false);
+    chassis.swingToPoint(15, 33, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 20});
+    pros::delay(400);
+    piston_long();
+    chassis.moveToPoint(15, 33, 2000, {.minSpeed = 10});
+    chassis.turnToHeading(85, 1000, {.minSpeed = 20});
+
+    chassis.waitUntilDone();
+
+    // Drive into park zone
+    descore.set_value(true);
+    left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+    right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+
+    left_drive.move(100);
+    right_drive.move(100);
+    pros::delay(200);
+
+    left_drive.move(60);
+    right_drive.move(60);
+    
+    wait_until_parked();
+
+    left_drive.brake();
+    right_drive.brake();
 }
 
 void opcontrol() {
