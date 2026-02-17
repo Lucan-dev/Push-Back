@@ -249,7 +249,7 @@ void autonomous() {
     chassis.turnToPoint(1, -58, 800, {.forwards = false});
     chassis.moveToPoint(1, -58, 800, {.forwards = false, .minSpeed = 10});
 
-    pros::delay(400);
+    pros::delay(600);
     piston_long();
 
     chassis.turnToHeading(180, 400, {.minSpeed = 20});
@@ -343,16 +343,15 @@ void autonomous() {
 
     // Go to park
     matchloader.set_value(false);
-    chassis.swingToPoint(15, 33, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 20});
-    pros::delay(400);
-    piston_long();
-    chassis.moveToPoint(15, 33, 2000, {.minSpeed = 10});
+    chassis.swingToPoint(16, 33, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 20});
+    chassis.moveToPoint(16, 33, 2000, {.minSpeed = 10});
     chassis.turnToHeading(85, 1000, {.minSpeed = 20});
 
     chassis.waitUntilDone();
 
     // Drive into park zone
     descore.set_value(true);
+    piston_locked();
     left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
     right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
 
@@ -403,7 +402,7 @@ void opcontrol() {
 		/* ----------------------------- Intake Control ---------------------------- */
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             if (lock_state == 2) {
-                intake_speed = 69;
+                intake_speed = 60;
             } else {
                 intake_speed = 127;
             }
