@@ -200,7 +200,7 @@ void autonomous() {
     pros::delay(400);
 
     intake.move(69);
-    pros::delay(800);
+    pros::delay(700);
 
     intake.move(60);
     pros::delay(1000);
@@ -288,17 +288,17 @@ void autonomous() {
     chassis.moveToPoint(-99, -14, 3000, {.maxSpeed = 100});
 
     // 3rd matchloader
-    chassis.turnToPoint(-100.5, -33, 800);
+    chassis.turnToPoint(-100, -33, 800);
     chassis.waitUntilDone();
 
     matchloader.set_value(true);
-    chassis.moveToPoint(-100.5, -33, 1000, {.maxSpeed = 60, .minSpeed = 10});
+    chassis.moveToPoint(-100, -33, 1000, {.maxSpeed = 60, .minSpeed = 10});
 
     chassis.waitUntilDone();
     pros::delay(1300);
 
     // Score 3rd load
-    chassis.moveToPoint(-100.5, -22.5, 1000, {.forwards = false});
+    chassis.moveToPoint(-100, -22.5, 1000, {.forwards = false});
     chassis.turnToPoint(-88, -13, 800, {.forwards = false});
     chassis.moveToPoint(-88, -13, 800, {.forwards = false});
     
@@ -402,7 +402,7 @@ void opcontrol() {
 		/* ----------------------------- Intake Control ---------------------------- */
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             if (lock_state == 2) {
-                intake_speed = 60;
+                intake_speed = 55;
             } else {
                 intake_speed = 127;
             }
