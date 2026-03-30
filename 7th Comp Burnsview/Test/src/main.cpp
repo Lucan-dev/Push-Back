@@ -14,6 +14,15 @@ pros::MotorGroup right_drive({7, 14, 15}, pros::MotorGearset::blue);
 
 pros::MotorGroup intake({3, -8}, pros::MotorGearset::blue);
 
+/* --------------------------------- Sensors -------------------------------- */
+pros::IMU inertial(21);
+
+/* --------------------------------- Pistons -------------------------------- */
+pros::adi::DigitalOut matchloader('C');
+pros::adi::DigitalOut descore('D');
+pros::adi::DigitalOut lock_bottom('E');
+pros::adi::DigitalOut lock_top('F');
+
 /* ---------------------------- Global Variables ---------------------------- */
 bool matchloader_down = false;
 bool descore_up = false;
@@ -34,6 +43,22 @@ void initialize() {
 void disabled() {}
 
 void competition_initialize() {}
+
+/* ----------------------------- Custom Function ---------------------------- */
+void piston_locked() {
+    lock_bottom.set_value(true);
+    lock_top.set_value(false);
+}
+
+void piston_long() {
+    lock_bottom.set_value(false);
+    lock_top.set_value(false);
+}
+
+void piston_middle() {
+    lock_bottom.set_value(true);
+    lock_top.set_value(true);
+}
 
 /* -------------------------- Competition Functions ------------------------- */
 void autonomous() {
@@ -86,6 +111,40 @@ void opcontrol() {
         }
 
         intake.move(intake_speed);
+
+        /* --------------------------------- Pistons -------------------------------- */
+		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            if (lock_state == 2) {
+                lock_state = 0;
+            } else {
+                lock_state = 2;
+            }
+
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            lock_state = 1;
+
+        } else if (lock_state != 2) {
+            lock_state = 0;
+        }
+        
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+			matchloader_down = !matchloader_down;
+			matchloader.set_value(matchloader_down);
+
+		} else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+			descore_up = !descore_up;
+			descore.set_value(descore_up);
+		}
+
+        if (lock_state == 0) {
+            piston_locked();
+
+        } else if (lock_state == 1) {
+            piston_long();
+
+        } else {
+            piston_middle();
+        }
 
 		pros::delay(20);
 	}
