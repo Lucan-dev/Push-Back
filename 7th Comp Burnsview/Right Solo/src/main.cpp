@@ -138,21 +138,22 @@ void intake_for(int velocity, int mseconds) {
 /* -------------------------- Competition Functions ------------------------- */
 void autonomous() {
     piston_locked();    
-	intake.move(127);
-
+	
     // Matchloader
-    chassis.moveToPoint(0, 28, 1000);
+    chassis.moveToPoint(0, 28, 1000, {.minSpeed = 10});
     matchloader.set_value(true);
+    pros::delay(100);
+    intake.move(127);
 
-    chassis.turnToPoint(10, 29.5, 1000);
-    chassis.moveToPoint(10, 29.5, 800);
+    chassis.turnToPoint(10, 29.5, 1000, {.minSpeed = 10, .earlyExitRange = 4});
+    chassis.moveToPoint(10, 29.5, 700, {.maxSpeed = 60, .minSpeed = 10});
 
     chassis.waitUntilDone();
     pros::delay(100);
 
     // Score
-    chassis.moveToPoint(-25, 30.7, 1000, {.forwards = false});
-    pros::delay(800);
+    chassis.moveToPoint(-25, 30.7, 1000, {.forwards = false, .minSpeed = 40});
+    pros::delay(600);
     piston_long();
 
     chassis.turnToHeading(90, 300, {.minSpeed = 30});
@@ -166,29 +167,28 @@ void autonomous() {
     matchloader.set_value(false);
 
     // 6 Blocks
-    chassis.turnToHeading(196, 800, {.minSpeed = 100, .earlyExitRange = 15});
-    chassis.turnToHeading(196, 400, {.minSpeed = 5});
+    chassis.turnToHeading(198, 800, {.minSpeed = 100, .earlyExitRange = 15});
+    chassis.turnToHeading(198, 400, {.minSpeed = 5, .earlyExitRange = 4});
 
     intake.move(127);
     piston_locked();
 
-    chassis.moveToPoint(2.5, -14, 1000, {.minSpeed = 50, .earlyExitRange = 8});
-    chassis.moveToPoint(3.9, -70.7, 1500);
+    chassis.moveToPoint(3, -70.7, 1500, {.minSpeed = 10, .earlyExitRange = 5});
 
     chassis.waitUntil(50);
     matchloader.set_value(true);
 
     // Go to Score
-    chassis.turnToPoint(30.3, -93.25, 800);
-    chassis.moveToPoint(30.3, -93.25, 800);
-    chassis.turnToHeading(90, 800);
-
-    chassis.moveToPoint(9.5, -94.4, 800, {.forwards = false});
-    pros::delay(600);
+    chassis.turnToPoint(20, -94.5, 800, {.minSpeed = 5, .earlyExitRange = 4});
+    chassis.moveToPoint(20, -94.5, 800, {.minSpeed = 10});
+    
+    chassis.turnToPoint(9.5, -96, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 3});
+    chassis.moveToPoint(9.5, -96, 800, {.forwards = false, .minSpeed = 10});
+    pros::delay(300);
     piston_long();
 
     chassis.turnToHeading(90, 300, {.minSpeed = 30});
-    chassis.moveToPoint(9.5, -94.4, 300, {.minSpeed = 100});
+    chassis.moveToPoint(9, -94.4, 300, {.minSpeed = 100});
     pros::delay(700);
 
     chassis.setPose({0, 0, chassis.getPose().theta});
@@ -197,30 +197,36 @@ void autonomous() {
     piston_locked();
 
     // 2nd Matchloader
-    chassis.moveToPoint(29.9, 0.8, 1000);
+    chassis.moveToPoint(29.9, 0.8, 1000, {.maxSpeed = 100, .minSpeed = 10});
     chassis.waitUntilDone();
 
     pros::delay(300);
 
     // Middle Goal
-    chassis.moveToPoint(20.4, 0.8, 800, {.forwards = false});
-    chassis.turnToHeading(135, 800);
+    chassis.moveToPoint(15, 0.8, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 5});
 
-    chassis.turnToPoint(-24.6, 41.2, 800, {.forwards = false});
+    chassis.turnToPoint(-24.6, 41.2, 800, {.forwards = false, .minSpeed = 5, .earlyExitRange = 4});
+    chassis.moveToPoint(-24.6, 41.2, 1000, {.forwards = false});
 
-    chassis.moveToPoint(-24.6, 41.2, 1000, {.forwards = false, .earlyExitRange = 40});
-    chassis.moveToPoint(-24.6, 41.2, 1000, {.forwards = false, .maxSpeed = 30});
+    chassis.waitUntil(30);
+    chassis.cancelAllMotions();
 
-    chassis.waitUntilDone();
-    intake.move(75);
+    chassis.moveToPoint(-24.6, 41.2, 1000, {.forwards = false, .maxSpeed = 60});
+    pros::delay(500);
+
+    intake.move(80);
     piston_middle();
-    pros::delay(10000);
+
+    chassis.turnToHeading(135, 1000);
+    matchloader.set_value(false);
+
+    pros::delay(3000);
 
     // Ending
-    chassis.waitUntilDone();
-    pros::delay(500);
-    intake.brake();
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // chassis.waitUntilDone();
+    // pros::delay(500);
+    // intake.brake();
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void opcontrol() {
