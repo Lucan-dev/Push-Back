@@ -137,39 +137,46 @@ void intake_for(int velocity, int mseconds) {
 
 /* -------------------------- Competition Functions ------------------------- */
 void autonomous() {
+    // Robot starts 15 degrees to the right
     piston_locked();
+
     // Group of 3 blocks
 	intake.move(127);
-    chassis.moveToPoint(0, 29, 2000, {.maxSpeed = 80, .minSpeed = 5});
+    chassis.moveToPoint(0, 29, 2000, {.minSpeed = 10, .earlyExitRange = 2});
     chassis.waitUntil(15);
     matchloader.set_value(true);
 
     // Matchloader
-    chassis.turnToPoint(-31, 8, 800, {.minSpeed = 5});
-    chassis.moveToPoint(-31, 8, 1500, {.minSpeed = 10});
+    chassis.turnToPoint(31, 8, 800, {.minSpeed = 10, .earlyExitRange = 4});
+    chassis.moveToPoint(31, 8, 1500, {.minSpeed = 10, .earlyExitRange = 2});
 
-    chassis.turnToPoint(-36, -3, 600, {.minSpeed = 15});
-    chassis.moveToPoint(-36, -3, 700, {.maxSpeed = 100, .minSpeed = 15});
+    chassis.turnToPoint(36, -3, 600, {.minSpeed = 10, .earlyExitRange = 4});
+    chassis.moveToPoint(36, -3, 700, {.maxSpeed = 100, .minSpeed = 15});
 
     chassis.waitUntilDone();
-    intake_for(127, 200);
+    pros::delay(200);
     
     // Score in long goal
-    chassis.moveToPoint(-26, 29, 1000, {.forwards = false, .minSpeed = 20});
-
-    pros::delay(700);
+    chassis.moveToPoint(27, 29, 1000, {.forwards = false, .minSpeed = 20});
+    pros::delay(600);
     piston_long();
-    intake.move(127);
-    pros::delay(1800);
+
+    chassis.turnToHeading(165, 300, {.minSpeed = 30});
+    chassis.moveToPoint(27, 29, 300, {.forwards = false, .minSpeed = 100});
+    
+    chassis.waitUntilDone();
+    pros::delay(900);
+    chassis.setPose(0, 0, chassis.getPose().theta - 165);
+
+    pros::delay(50);
     matchloader.set_value(false);
 
     // Descore
-    chassis.setPose(0, 0, 0);
     chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 30, .earlyExitRange = 5});
-    chassis.moveToPoint(10, 13, 800, {.minSpeed = 15});
+    chassis.moveToPoint(10.5, 13, 800, {.minSpeed = 15, .earlyExitRange = 2});
 
     intake.brake();
-    chassis.turnToHeading(3, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    chassis.turnToHeading(6, 800, {.minSpeed = 15, .earlyExitRange = 4});
     chassis.moveToPoint(7.5, -16, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
     
     // Hold position

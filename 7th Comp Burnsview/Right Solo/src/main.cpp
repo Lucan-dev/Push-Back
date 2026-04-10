@@ -157,7 +157,7 @@ void autonomous() {
     piston_long();
 
     chassis.turnToHeading(90, 300, {.minSpeed = 30});
-    chassis.moveToPoint(-26, 30.7, 300, {.minSpeed = 100});
+    chassis.moveToPoint(-26, 30.7, 300, {.forwards = false,.minSpeed = 100});
     pros::delay(600);
 
     chassis.setPose({0, 0, chassis.getPose().theta});
@@ -188,7 +188,7 @@ void autonomous() {
     piston_long();
 
     chassis.turnToHeading(90, 300, {.minSpeed = 30});
-    chassis.moveToPoint(9, -94.4, 300, {.minSpeed = 100});
+    chassis.moveToPoint(9, -94.4, 300, {.forwards = false, .minSpeed = 100});
     pros::delay(700);
 
     chassis.setPose({0, 0, chassis.getPose().theta});
@@ -220,7 +220,7 @@ void autonomous() {
     chassis.turnToHeading(135, 1000);
     matchloader.set_value(false);
 
-    pros::delay(3000);
+    pros::delay(2000);
 
     // Ending
     // chassis.waitUntilDone();
