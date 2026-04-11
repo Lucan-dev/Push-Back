@@ -19,7 +19,8 @@ pros::IMU inertial(21);
 pros::Rotation vert_tracker(5);
 
 /* --------------------------------- Pistons -------------------------------- */
-pros::adi::DigitalOut mid_descore('A');
+pros::adi::DigitalOut odom_lift('A');
+pros::adi::DigitalOut mid_descore('B');
 pros::adi::DigitalOut matchloader('C');
 pros::adi::DigitalOut descore('D');
 pros::adi::DigitalOut lock_bottom('E');
@@ -96,6 +97,7 @@ void initialize() {
 	// Setup
 	pros::lcd::initialize();
 	chassis.calibrate();
+    odom_lift.set_value(true);
 
 	// Brain Screen
 	pros::Task screen_task([&]() {
@@ -139,6 +141,7 @@ void intake_for(int velocity, int mseconds) {
 void autonomous() {
     // Robot starts 15 degrees to the left
     piston_locked();
+    odom_lift.set_value(true);
 
     // Group of 3 blocks
 	intake.move(127);
@@ -195,6 +198,9 @@ void opcontrol() {
     /* ----------------------------- Motor Stopping ----------------------------- */
     left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
     right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
+
+    odom_lift.set_value(false);
+
 
 	// loop forever
     while (true) {

@@ -19,7 +19,8 @@ pros::IMU inertial(21);
 pros::Rotation vert_tracker(5);
 
 /* --------------------------------- Pistons -------------------------------- */
-pros::adi::DigitalOut mid_descore('A');
+pros::adi::DigitalOut odom_lift('A');
+pros::adi::DigitalOut mid_descore('B');
 pros::adi::DigitalOut matchloader('C');
 pros::adi::DigitalOut descore('D');
 pros::adi::DigitalOut lock_bottom('E');
@@ -97,6 +98,8 @@ void initialize() {
 	pros::lcd::initialize();
 	chassis.calibrate();
 
+    odom_lift.set_value(true);
+
 	// Brain Screen
 	pros::Task screen_task([&]() {
 		while (true) {
@@ -137,7 +140,8 @@ void intake_for(int velocity, int mseconds) {
 
 /* -------------------------- Competition Functions ------------------------- */
 void autonomous() {
-    piston_locked();    
+    piston_locked();
+    odom_lift.set_value(true);
 	
     // Matchloader
     chassis.moveToPoint(0, 28, 1000, {.minSpeed = 10});
@@ -237,6 +241,8 @@ void opcontrol() {
     /* ----------------------------- Motor Stopping ----------------------------- */
     left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
     right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
+
+    odom_lift.set_value(false);
 
 	// loop forever
     while (true) {
