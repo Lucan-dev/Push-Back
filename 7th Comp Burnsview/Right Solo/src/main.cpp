@@ -218,7 +218,7 @@ void autonomous() {
     chassis.moveToPoint(-24.6, 41.2, 1000, {.forwards = false, .maxSpeed = 60});
     pros::delay(500);
 
-    intake.move(80);
+    intake.move(127);
     piston_middle();
 
     chassis.turnToHeading(135, 1000);
@@ -242,7 +242,7 @@ void opcontrol() {
     left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
     right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
 
-    odom_lift.set_value(false);
+    odom_lift.set_value(true);
 
 	// loop forever
     while (true) {

@@ -158,7 +158,7 @@ void autonomous() {
 
     left_drive.move(60);
     right_drive.move(60);
-    pros::delay(600);
+    pros::delay(1000);
 
     // Reset odom
     left_drive.move(-55);
@@ -346,6 +346,12 @@ void autonomous() {
     chassis.turnToHeading(85, 1000, {.minSpeed = 20});
 
     chassis.waitUntilDone();
+    odom_lift.set_value(false);
+    left_drive.move(100);
+    right_drive.move(100);
+    pros::delay(670);
+    left_drive.brake();
+    right_drive.brake();
 	
     // Ending
     chassis.waitUntilDone();
