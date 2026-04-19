@@ -164,11 +164,11 @@ void autonomous() {
     chassis.moveToPoint(-33.1, 6.4, 800, {.forwards = false, .minSpeed = 40, .earlyExitRange = 2});
 
     chassis.turnToPoint(17, 35, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 4});
-    chassis.moveToPoint(17, 35, 1500, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.moveToPoint(17, 35, 1000, {.forwards = false, .minSpeed = 10});
 
-    chassis.waitUntil(34);
+    chassis.waitUntil(32);
     chassis.cancelAllMotions();
-    chassis.moveToPoint(17, 35, 1500, {.forwards = false, .maxSpeed = 50});
+    chassis.moveToPoint(17, 35, 1200, {.forwards = false, .maxSpeed = 50});
 
     pros::delay(300);
     intake.move(-50);
@@ -181,11 +181,11 @@ void autonomous() {
     pros::delay(200);
 
     // Sneaky Descore
-    chassis.moveToPoint(-15, 14.5, 1000,{.minSpeed = 10, .earlyExitRange = 2});
+    chassis.moveToPoint(-13.5, 16.5, 1000,{.minSpeed = 10, .earlyExitRange = 2});
     matchloader.set_value(false);
 
-    chassis.turnToPoint(-11.8, 49, 800, {.minSpeed = 10, .earlyExitRange = 4});
-    chassis.moveToPoint(-11.8, 49, 1000, {.minSpeed = 10, .earlyExitRange = 2});
+    chassis.turnToPoint(-11.5, 49, 800, {.minSpeed = 10, .earlyExitRange = 4});
+    chassis.moveToPoint(-11.5, 49, 1000, {.minSpeed = 10, .earlyExitRange = 2});
 
     chassis.turnToHeading(17.5, 300, {.minSpeed = 20, .earlyExitRange = 4});
     descore.set_value(false);
@@ -196,37 +196,43 @@ void autonomous() {
     chassis.waitUntil(6);
     chassis.cancelAllMotions();
 
-    chassis.moveToPoint(-20, 16, 1500, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.moveToPoint(-20, 19, 1500, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
 
     // Score
-    chassis.turnToPoint(-29, 16, 800, {.minSpeed = 10, .earlyExitRange = 4});
+    chassis.turnToPoint(-28, 18, 800, {.minSpeed = 15, .earlyExitRange = 4});
     intake.brake();
-    chassis.moveToPoint(-29, 16, 800, {.minSpeed = 10, .earlyExitRange = 2});
+    chassis.moveToPoint(-28, 18, 800, {.minSpeed = 25, .earlyExitRange = 2});
 
-    chassis.turnToPoint(-27, 29, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 4});
-    chassis.moveToPoint(-27, 29, 800, {.forwards = false, .minSpeed = 20});
+    chassis.turnToPoint(-26.5, 29, 800, {.forwards = false, .minSpeed = 15, .earlyExitRange = 4});
+    chassis.moveToPoint(-26.5, 29, 800, {.forwards = false, .minSpeed = 20});
+    pros::delay(200);
     intake.move(127);
-    pros::delay(400);
+    pros::delay(200);
     piston_long();
 
-    chassis.turnToHeading(-165, 400, {.minSpeed = 30});
-    chassis.moveToPoint(-26, 31, 400, {.forwards = false, .minSpeed = 100});
-    pros::delay(500);
-    chassis.setPose(0, 0, chassis.getPose().theta - 195);
+    chassis.turnToHeading(-165, 300, {.minSpeed = 30});
+    pros::delay(300);
+    chassis.moveToPoint(-26, 32, 300, {.forwards = false, .minSpeed = 100});
+    pros::delay(300);
+    chassis.setPose(0, 0, chassis.getPose().theta - 196);
 
     pros::delay(50);
 
     // 2nd Descore 
-    chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 40, .earlyExitRange = 5});
-    chassis.moveToPoint(10.5, 13, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    chassis.swingToHeading(48, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 60, .earlyExitRange = 5});
+    chassis.moveToPoint(10.2, 10, 800, {.minSpeed = 15, .earlyExitRange = 2});
 
     intake.brake();
-    chassis.turnToHeading(6, 800, {.minSpeed = 15, .earlyExitRange = 4});
-    chassis.moveToPoint(7.5, -16, 15000, {.forwards = false, .minSpeed = 40});
-    
-    // Hold position
+    chassis.turnToHeading(8, 800, {.minSpeed = 15, .earlyExitRange = 4});
+
     left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
     right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+
+    chassis.moveToPoint(7, -16, 15000, {.forwards = false, .minSpeed = 40});
+    
+    // Hold position
+    left_drive.brake();
+    right_drive.brake();
 }
 
 void opcontrol() {
@@ -235,12 +241,9 @@ void opcontrol() {
 	int intake_speed = 0;
 
     /* ----------------------------- Motor Stopping ----------------------------- */
-    // left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
-    // right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
-    // left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_COAST);
-    // right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_COAST);
+    left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
+    right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_BRAKE);
     
-
     odom_lift.set_value(false);
 
 	// loop forever
