@@ -286,16 +286,12 @@ void opcontrol() {
 
         /* --------------------------------- Pistons -------------------------------- */
 		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            if (lock_state == 2) {
-                lock_state = 0;
-            } else {
-                lock_state = 2;
-            }
+            lock_state = 2;
 
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
             lock_state = 1;
 
-        } else if (lock_state != 2) {
+        } else {
             lock_state = 0;
         }
         

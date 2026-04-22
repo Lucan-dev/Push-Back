@@ -171,7 +171,7 @@ void autonomous() {
     matchloader.set_value(false);
 
     // 6 Blocks
-    chassis.turnToHeading(198, 800, {.minSpeed = 100, .earlyExitRange = 15});
+    chassis.turnToHeading(198, 800, {.minSpeed = 120, .earlyExitRange = 10});
     chassis.turnToHeading(198, 400, {.minSpeed = 5, .earlyExitRange = 4});
 
     intake.move(127);
@@ -183,8 +183,8 @@ void autonomous() {
     matchloader.set_value(true);
 
     // Go to Score
-    chassis.turnToPoint(20, -94.5, 800, {.minSpeed = 5, .earlyExitRange = 4});
-    chassis.moveToPoint(20, -94.5, 800, {.minSpeed = 10});
+    chassis.turnToPoint(22, -94.5, 800, {.minSpeed = 5, .earlyExitRange = 4});
+    chassis.moveToPoint(22, -94.5, 800, {.minSpeed = 10});
     
     chassis.turnToPoint(9.5, -96, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 3});
     chassis.moveToPoint(9.5, -96, 800, {.forwards = false, .minSpeed = 10});
@@ -216,9 +216,9 @@ void autonomous() {
     chassis.cancelAllMotions();
 
     chassis.moveToPoint(-24.6, 41.2, 1000, {.forwards = false, .maxSpeed = 60});
-    pros::delay(500);
+    pros::delay(400);
 
-    intake.move(127);
+    intake.move(100);
     piston_middle();
 
     chassis.turnToHeading(135, 1000);
@@ -283,17 +283,13 @@ void opcontrol() {
         intake.move(intake_speed);
 
         /* --------------------------------- Pistons -------------------------------- */
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            if (lock_state == 2) {
-                lock_state = 0;
-            } else {
-                lock_state = 2;
-            }
+		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            lock_state = 2;
 
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
             lock_state = 1;
 
-        } else if (lock_state != 2) {
+        } else {
             lock_state = 0;
         }
         
