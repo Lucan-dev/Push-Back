@@ -175,12 +175,15 @@ void autonomous() {
     matchloader.set_value(false);
 
     // Descore    
-    chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 30, .earlyExitRange = 5});
-    chassis.moveToPoint(10.5, 13, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    // chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 900, {.minSpeed = 50, .earlyExitRange = 5});
+    // chassis.moveToPoint(10.5, 13, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    chassis.moveToPoint(0, 6, 1600, {.minSpeed = 20, .earlyExitRange = 3});
+    chassis.moveToPoint(15.5, 14, 1600, {.minSpeed = 30, .earlyExitRange = 2});
 
     intake.brake();
-    chassis.turnToHeading(6, 800, {.minSpeed = 15, .earlyExitRange = 4});
-    chassis.moveToPoint(7.5, -16, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
+    chassis.turnToHeading(5, 800, {.minSpeed = 15, .earlyExitRange = 4});
+    // chassis.moveToPoint(7.5, -16, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
+    chassis.moveToPoint(11, -18, 15000, {.forwards = false, .minSpeed = 40});
     
     // Hold position
     while (true) {

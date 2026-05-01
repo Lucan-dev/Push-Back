@@ -177,7 +177,7 @@ void autonomous() {
 
     left_drive.move(60);
     right_drive.move(60);
-    pros::delay(400);
+    pros::delay(300);
 
     // Reset odom
     left_drive.move(-55);
@@ -226,11 +226,10 @@ void autonomous() {
     
     chassis.moveToPoint(50, -1, 100, {.maxSpeed = 60});
     intake.move(70);
-    pros::delay(1200);
+    pros::delay(1000);
 
     chassis.moveToPoint(50, -1, 2000, {.maxSpeed = 100});
     pros::delay(500);
-    intake.brake();
     piston_locked();
 
     // Get 3 block group
@@ -281,9 +280,8 @@ void autonomous() {
     chassis.turnToHeading(180, 400, {.minSpeed = 30});
     chassis.moveToPoint(2.5, -58, 400, {.forwards = false, .minSpeed = 100});
 
-    pros::delay(1500);
+    pros::delay(1400);
     chassis.setPose({0, 0, chassis.getPose().theta});
-    pros::delay(50);
 
     // 2nd matchloader
     chassis.moveToPoint(-1.5, -33, 1200, {.maxSpeed = 60, .minSpeed = 10});
@@ -301,9 +299,8 @@ void autonomous() {
     chassis.turnToHeading(180, 400, {.minSpeed = 30});
     chassis.moveToPoint(0, 2, 400, {.forwards = false, .minSpeed = 100});
 
-    pros::delay(1500);
+    pros::delay(1400);
     chassis.setPose({0, 0, chassis.getPose().theta});
-    pros::delay(50);
 
     // Cross field
     chassis.moveToPoint(0, -12.5, 800);
@@ -343,9 +340,8 @@ void autonomous() {
     chassis.turnToHeading(0, 400, {.minSpeed = 30});
     chassis.moveToPoint(-100.5, 58, 400, {.forwards = false, .minSpeed = 100});
 
-    pros::delay(1500);
+    pros::delay(1400);
     chassis.setPose({0, 0, chassis.getPose().theta});
-    pros::delay(50);
 
     // 4th matchloader
     chassis.moveToPoint(0.5, 32, 1200, {.maxSpeed = 60, .minSpeed = 10});
@@ -363,25 +359,28 @@ void autonomous() {
     chassis.turnToHeading(0, 400, {.minSpeed = 30});
     chassis.moveToPoint(0, -2, 400, {.forwards = false, .minSpeed = 100});
 
-    pros::delay(1200);
+    pros::delay(1100);
     chassis.setPose({0, 0, chassis.getPose().theta});
-    pros::delay(50);
 
     // Go to park
     matchloader.set_value(false);
     chassis.swingToPoint(16, 33, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 20});
     chassis.moveToPoint(16, 33, 2000, {.minSpeed = 10});
-    chassis.turnToHeading(85, 1000, {.minSpeed = 20});
+    chassis.turnToHeading(85, 1000, {.minSpeed = 20, .earlyExitRange = 4});
 
     chassis.waitUntilDone();
     odom_lift.set_value(false);
 
     left_drive.move(100);
     right_drive.move(100);
-    pros::delay(400);
+    pros::delay(300);
 
-    left_drive.move(55);
-    right_drive.move(55);
+    left_drive.move(60);
+    right_drive.move(60);
+    pros::delay(300);
+
+    left_drive.move(75);
+    right_drive.move(75);
     
     wait_until_parked();
 

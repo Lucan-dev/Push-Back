@@ -144,7 +144,6 @@ void autonomous() {
     odom_lift.set_value(true);
 
     // Group of 3 blocks
-	intake.move(127);
     chassis.moveToPoint(0, 29, 2000, {.minSpeed = 10, .earlyExitRange = 2});
     chassis.waitUntil(15);
     matchloader.set_value(true);
@@ -191,22 +190,6 @@ void autonomous() {
     chassis.turnToHeading(45, 300, {.minSpeed = 10});
     pros::delay(800);
     matchloader.set_value(false);
-
-    // Descore    
-    // chassis.moveToPoint(-14, 9, 1500, {.minSpeed = 10, .earlyExitRange = 1});
-    // chassis.waitUntil(5);
-    // piston_locked();
-    // intake.brake();
-
-    // chassis.turnToHeading(182, 800, {.minSpeed = 10, .earlyExitRange = 2});
-    // chassis.moveToPoint(-11.5, -22, 1500, {.maxSpeed = 100, .minSpeed = 20});
-    
-    // Hold position
-    while (true) {
-        if (chassis.getPose().theta > 180) {
-            chassis.turnToHeading(180, 10000, {.minSpeed = 15});
-        }
-    }
 }
 
 void opcontrol() {

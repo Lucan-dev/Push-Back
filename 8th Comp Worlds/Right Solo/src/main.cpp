@@ -171,8 +171,8 @@ void autonomous() {
     matchloader.set_value(false);
 
     // 6 Blocks
-    chassis.turnToHeading(198, 800, {.minSpeed = 120, .earlyExitRange = 10});
-    chassis.turnToHeading(198, 400, {.minSpeed = 5, .earlyExitRange = 4});
+    chassis.turnToHeading(210, 900, {.minSpeed = 127, .earlyExitRange = 10});
+    chassis.turnToHeading(210, 400, {.minSpeed = 5, .earlyExitRange = 4});
 
     intake.move(127);
     piston_locked();

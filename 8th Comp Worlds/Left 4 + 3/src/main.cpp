@@ -178,12 +178,12 @@ void autonomous() {
     
     // Middle goal
     chassis.moveToPoint(0, 20, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
-    chassis.turnToPoint(-40.5, -20.5, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.turnToPoint(-40, -21, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
 
-    chassis.moveToPoint(-40.5, -20.5, 1500, {.forwards = false, .maxSpeed = 100, .minSpeed = 10});
+    chassis.moveToPoint(-40, -21, 1500, {.forwards = false, .maxSpeed = 100, .minSpeed = 10});
     chassis.waitUntil(35);
     chassis.cancelAllMotions();
-    chassis.moveToPoint(-40.5, -20.5, 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 10});
+    chassis.moveToPoint(-40, -21, 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 10});
 
     chassis.waitUntilDone();
     intake.move(100);

@@ -218,17 +218,28 @@ void autonomous() {
 
     pros::delay(50);
 
-    // 2nd Descore 
-    chassis.swingToHeading(48, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 60, .earlyExitRange = 5});
-    chassis.moveToPoint(10.2, 10, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    // 2nd Descore
+    // chassis.swingToHeading(50, lemlib::DriveSide::RIGHT, 900, {.minSpeed = 50, .earlyExitRange = 5});
+    // chassis.moveToPoint(10.5, 13, 800, {.minSpeed = 15, .earlyExitRange = 2});
+    chassis.moveToPoint(0, 6, 1600, {.minSpeed = 20, .earlyExitRange = 3});
+    chassis.moveToPoint(15.5, 14, 1600, {.minSpeed = 30, .earlyExitRange = 2});
 
     intake.brake();
-    chassis.turnToHeading(8, 800, {.minSpeed = 15, .earlyExitRange = 4});
+    chassis.turnToHeading(5, 800, {.minSpeed = 15, .earlyExitRange = 4});
+    // chassis.moveToPoint(7.5, -16, 15000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20});
+    chassis.moveToPoint(11, -18, 15000, {.forwards = false, .minSpeed = 40});
 
-    left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
-    right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+    // // chassis.swingToHeading(48, lemlib::DriveSide::RIGHT, 800, {.minSpeed = 60, .earlyExitRange = 5});
+    // chassis.moveToPoint(0, 5, 1600, {.minSpeed = 10, .earlyExitRange = 2});
+    // chassis.moveToPoint(14, 14, 1600, {.minSpeed = 30, .earlyExitRange = 2});
 
-    chassis.moveToPoint(7, -16, 15000, {.forwards = false, .minSpeed = 40});
+    // intake.brake();
+    // chassis.turnToHeading(8, 800, {.minSpeed = 15, .earlyExitRange = 4});
+
+    // left_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+    // right_drive.set_brake_mode_all(pros::E_MOTOR_BRAKE_HOLD);
+
+    // chassis.moveToPoint(7, -16, 15000, {.forwards = false, .minSpeed = 40});
     
     // Hold position
     left_drive.brake();
